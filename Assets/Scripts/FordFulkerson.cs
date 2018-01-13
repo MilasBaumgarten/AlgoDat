@@ -3,113 +3,116 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class FordFulkerson : MonoBehaviour {
+public class FordFulkerson : MonoBehaviour { //Erstellt von Tim und Sebastian
 
-	private static bool run;
-	private static int leftCapacity;
-	private static int minimalFlow;
-	private static Edge[] Way;
-	private static int MaxFlow;
+	private static bool run; //gibt Auskunft darüber, ob Algorithmus ausgeführt werden kann
+	private static int leftCapacity; //gibt Auskunft über die auf der Edge verbleibende Kapazität
+	private static int minimalFlow; //gibt Auskunft über die im aktuellen Druchlauf kleinste benutzte Kapazität, die danach addiert/subtrahiert wird
+	private static Edge[] Way; //gibt Auskunft über die beim aktuellen Durchgang abgelaufenen Edges
+	private static int MaxFlow; //gibt Auskunft über den maximalen Fluss des Graphen
 
-	private void vorarbeit(){
-		//ist Quelle und Senke voranden
-		if (List.getSource () != null && List.getSink () != null && List.getSource() != List.getSink()) {
+	private void vorarbeit(){ // Methode, welche grundlegende Schritte ausführt, um FFA (Ford Fulkerson Algorithmus) funktionsfähig zu machen
+		if (List.getSource () != null && List.getSink () != null && List.getSource() != List.getSink()) {   //prüfen, ob Quelle und Senke voranden und nicht gleich sind
+
+			//Variablen der Klasse zurücksetzen, um eventuell zwischengespeicherte Werte bei Neustart zu löschen
 			run = true;
 			minimalFlow = 0;
 			leftCapacity = 0;
 			MaxFlow = 0;
 			Array.Clear (Way);
-			//Flow auf 0 setzen
-			//wird standartmaessig mit 0 belegt
-			for (int i = 0; i < getAllEdges().Length; i++) {
+
+			for (int i = 0; i < getAllEdges().Length; i++) {  //Flow aller Edges auf 0 setzen; wird standartmaessig mit 0 belegt
 				allEdges [i].setFlow () = 0;
 			}
-			
-		} else {
-			//Fehlermeldung
-			kill();
+		} 
+		else {
+			//Fehlermeldung im Dialogfenster ausgeben, dass Quelle und Senke nicht gewählt sind -> noch implementieren !!!
+			kill();// Algorithmus beenden und maximalen Fluss ausgeben
 		}
-			
 	}
 
-	public void fordFulkerson(bool walkThrough){
-		vorarbeit ();
-		if (run) {
-			Node actualN = List.getSource ();
-			Edge[] connectedEdges = actualN.getConnectedEdges ();
+	public void fordFulkerson(bool walkThrough){ // eigentlicher Algorithmus, Walkthrough Variable gibt Auskunft darüber, welche Darstellungsart Nutzer angecklickt hat -> Schrittweise oder am Stück
+		vorarbeit (); // oben vorbereitet und erläuterte Vorarbeit einmalig ausführen vor Start 
+		if (run) { // Test, ob Algorithmus noch ausgeführt werden soll bzw. darf
+			Node actualN = List.getSource (); // aktuell betrachteter Knoten ist die gewählte Quelle
+			Edge[] connectedEdges = actualN.getConnectedEdges (); // mit Quellknoten verbundene Kanten werden ermittelt und zwischengespeichert
+			
+			for (int i = 0; i < connectedEdges.Lenght; i++) { //iterieren über alle am Knoten anliegenden Kanten
 
-			 
-
-			for (int i = 0; i < connectedEdges.Lenght; i++) {
-				if (connectedEdges [i].getFlow < connectedEdges [i].getCapacityMax) {
-					//Blink gewählte edge
-					Edge actualEdge = connectedEdges [i];
-					minimalFlow = actualEdge.getCapacityMax ();
-					Way.add (actualEdge);
-					actualN = actualEdge.getEnd ();
-					if (actualN == List.getSink ()) {
-						terminate (walkThrough);
+				if (connectedEdges [i].getFlow < connectedEdges [i].getCapacityMax) { // Check ob aktuell betrachtete Kante noch freie Kapazitäten für den Fluss hat, erste passende Kante wird gewählt
+					//Blink gewählter passender Edge hier noch implementieren !!! Eigene Methode ???
+					
+					Edge actualEdge = connectedEdges [i]; // Auswahl erster passender zu betrachtender Edge
+					minimalFlow = actualEdge.getCapacityMax (); // kleinster Fluss wird als Referenzwert mit der maximalen Kapazität der Quelle initialisiert, CapacityMax = Dicke des Lasers, statische Zahl aus tabelle wird dargestellt
+					Way.add (actualEdge); // ausgewählte Kante wird dem Wegearray hinzugefügt und sich gemerkt, um später den Weg von Queelle zu Senke rekonstruieren zu können
+					actualN = actualEdge.getEnd ();// zu betrachtender Knoten wird gewechselt auf den Knoten, der am Ende der Edge befindlich ist  (Frage bei Rückläufigen Edges???)
+					
+					if (actualN == List.getSink ()) { // Test ob neuer zu betrachtender Knoten die Senke ist
+						terminate (walkThrough); // Wenn ja, terminiere den Algorithmus und starte neuen Durchlauf, da kompletter Weg von Quelle zu Senke gefunden wurde
 					}
-					break;
-				} else {
-					kill ();
-					break;
+
+					break; // Abbruch übergeordneter for Schleife
+				}
+				else {
+					kill ();// Algorithmus beenden und maximalen Fluss ausgeben
+					break;// Abbruch übergeordneter for Schleife
 				}
 			}
 
-			while (actualN != List.getSink () && actualN != List.getSource ()) {
+			while (actualN != List.getSink () && actualN != List.getSource ()) { // Betrachten restlicher im  Grafen verbliebener Knoten, solange diese nicht Senke oder Quelle sind
 
-				connectedEdges = actualN.getConnectedEdges ();
+				Edge[] connectedEdges = actualN.getConnectedEdges (); // mit Quellknoten verbundene Kanten werden ermittelt und zwischengespeichert, bereits besuchte Kanten von Betrachtung ausschliessen??? -> Edge[] connectedEdges = actualN.getConnectedEdges ()- Way[]; ???
 
-				for (int i = 0; i < connectedEdges.Lenght; i++) {
-					if (connectedEdges [i].getFlow < connectedEdges [i].getCapacityMax) {
-						//Blink gewählte edge
-						Edge actualEdge = connectedEdges [i];
-						leftCapacity = actualEdge.getCapacityMax() - actualEdge.getFlow ();
-						if (minimalFlow > leftCapacity) {
-							minimalFlow = leftCapacity;
+				for (int i = 0; i < connectedEdges.Lenght; i++) {//iterieren über alle am Knoten anliegenden Kanten
+					if (connectedEdges [i].getFlow < connectedEdges [i].getCapacityMax) {// Check ob aktuell betrachtete Kante noch freie Kapazitäten für den Fluss hat, erste passende Kante wird gewählt
+						//Blink gewählter passender Edge hier noch implementieren !!! Eigene Methode ???
+						
+						Edge actualEdge = connectedEdges [i];// Auswahl erster passender zu betrachtender Edge
+						leftCapacity = actualEdge.getCapacityMax() - actualEdge.getFlow (); // auf Edge verbleibende Kapazität wird aus der Subtraktion des aktuellen Durchflusses von der maximalen Kapazitzät errechnet
+
+						if (minimalFlow > leftCapacity) { //Test ob dynamischer Wert des kleinsten im Durchlauf verwendeten Flusses erneuert werden muss
+							minimalFlow = leftCapacity; //Wenn ja, wird dieser durch den aktuell verbleibenden Fluss auf der Edge ersetzt
 						}
-						Way.add (actualEdge);
-						actualN = actualEdge.getEnd ();
-						if (actualN == List.getSink ()) {
-							terminate (walkThrough);
+						
+						Way.add (actualEdge);// ausgewählte Kante wird dem Wegearray hinzugefügt und sich gemerkt, um später den Weg von Queelle zu Senke rekonstruieren zu können
+						actualN = actualEdge.getEnd ();// zu betrachtender Knoten wird gewechselt auf den Knoten, der am Ende der Edge befindlich ist  (Frage bei Rückläufigen Edges???)
+
+						if (actualN == List.getSink ()) {// Test ob neuer zu betrachtender Knoten die Senke ist
+							terminate (walkThrough);// Wenn ja, terminiere den Algorithmus und starte neuen Durchlauf, da kompletter Weg von Quelle zu Senke gefunden wurde
 						}
-						break;
+						break;// Abbruch übergeordneter for Schleife
 					}
 					else {
-						kill ();
-						break;
+						kill ();// Algorithmus beenden und maximalen Fluss ausgeben
+						break;// Abbruch übergeordneter for Schleife
 					}
 				}
 			}
-
-
-
-		
 		}
 	}
 
-	private void terminate(bool walkThrough){
-		MaxFlow += minimalFlow;
-		for (int i = 0; i < Way.Length; i++) {
-			if (Way [i].getIsForward ()) {
-				Way [i].setFlow ((Way [i].getCapacityMax () - Way [i].getFlow ()) - minimalFlow);
-			} else {
-				Way [i].setFlow ((Way [i].getCapacityMax () - Way [i].getFlow ()) + minimalFlow);
+	private void terminate(bool walkThrough){ //Terminieren des Algorithmus nach einem Erfolgreichen Durchlauf (Schritt), Walkthrough gibt abspielart an
+		MaxFlow += minimalFlow; // Inkrimentierung des Maximalen Flusses, um den, im aktuellen Durchgang, kleinsten benutzten Fluss
+		for (int i = 0; i < Way.Length; i++) {//Iteration über alle im Weg zwischen Quelle und Senke befindlichen Kanten des aktuellen Durchlaufes
+
+			if (Way [i].getIsForward ()) {// Test ob es sich um vorwärts gerichtete Edge handelt (wie von User eingezeichnet)
+				Way [i].setFlow ((Way [i].getCapacityMax () - Way [i].getFlow ()) - minimalFlow); // Verringerung verbleibender Kapazität der Kanten, um deren aktuellen Füllstand
+			} 
+			else {
+				Way [i].setFlow ((Way [i].getCapacityMax () - Way [i].getFlow ()) + minimalFlow);// Erhöhung verbleibender Kapazität der Kanten, um deren aktuellen rückläufigen Durchfluss
 			}
 		}
 
-		if(walkThrough){
-			fordFulkerson ();
+		if(walkThrough){ //Test ob kompletter Durchlauf angewählt wurde
+			fordFulkerson ();//rekursiver Neuaufruf des FFA
 		}
 	}
 
-	private void kill(){
+	private void kill(){ //Beendungsmethode
 			//Ausgabe auf Ausgabelabelfeld anpassen!!!!!!
-			Console.WriteLine(MaxFlow);			
+			Console.WriteLine(MaxFlow);	//Ausgabe des maximalen Flusses
+			run = false;//Ausführvariabel auf Stopp setzen
 	}
-
-
 }
 
 */
