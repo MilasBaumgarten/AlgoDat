@@ -223,7 +223,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 3
-  destinationPos: {x: 0, y: 0}
+  widthMultiplier: 1
+  maxWidth: 2
 --- !u!120 &742456113
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -306,7 +307,7 @@ LineRenderer:
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
-    numCapVertices: 8
+    numCapVertices: 2
     alignment: 0
     textureMode: 0
     generateLightingData: 0
@@ -335,6 +336,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1277805822}
   - component: {fileID: 1277805823}
+  - component: {fileID: 1277805824}
   m_Layer: 0
   m_Name: AnimatedEdge
   m_TagString: Untagged
@@ -437,12 +439,26 @@ LineRenderer:
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
-    numCapVertices: 8
+    numCapVertices: 2
     alignment: 0
     textureMode: 0
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!111 &1277805824
+Animation:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1277805821}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &2139086505
 GameObject:
   m_ObjectHideFlags: 0

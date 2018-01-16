@@ -4,19 +4,29 @@ using UnityEngine;
 
 public class AnimateEdge : MonoBehaviour {
 
+	[Header("Animation")]
+	// Animationsgeschwindigkeit und Zeit
+	[SerializeField]
+	private float speed = 3f;
 	private float currentTime = 0f;
-	public float speed = 3f;
+	// ob Kante gerade animiert wird
+	private bool animating = false;
+
+	[Header("Capacity")]
+	// Kapazität der Kante
+	[SerializeField]
+	private float widthMultiplier = 1;
+	[SerializeField]
+	private float maxWidth = 2;
+	private int maxCapacity = -1;
+	private int usedCapacity = 0;
 
 	// Zielposition bzw. Ende der Kante ab
-	[SerializeField]
-	Vector2 destinationPos = new Vector2();
-
-	// ob Kante gerade animiert wird
-	bool animating = false;
+	private Vector2 destinationPos = new Vector2();
 
 	// verkürze Kommunikation mit LineRenderer Komponente über Variable
-	LineRenderer main_line;
-	LineRenderer animated_line;
+	private LineRenderer main_line;
+	private LineRenderer animated_line;
 
 	void Start(){
 		main_line = GetComponent<LineRenderer>();
@@ -53,10 +63,23 @@ public class AnimateEdge : MonoBehaviour {
 	public void startAnimation(){
 		animating = true;
 		animated_line.SetPosition(0, transform.position + Vector3.back);
+
+		// Ändere Farbe abhängig von Kapazität
+		usedCapacity ++;
+		animated_line.material.EnableKeyword("_EMISSION");
+		Debug.Log((float)1-usedCapacity/maxCapacity + " _ " + (float)usedCapacity/maxCapacity);
+		animated_line.material.SetColor("_EmissionColor", new Color((float)usedCapacity/maxCapacity, (float)1-usedCapacity/maxCapacity, 0));
 	}
 
 //#####################################################################
 // GET			SET
+
+	// setze Kapazität bis Maximalwert
+	public void setMaxCapacity(int capacity){
+		maxCapacity = capacity;
+		main_line.widthMultiplier = Mathf.Min(capacity * widthMultiplier, maxWidth);
+		animated_line.widthMultiplier = Mathf.Min(capacity * widthMultiplier, maxWidth);
+	}
 
 	// übergebe Zielposition bzw. Ende der Kante
 	public void setDestination(float x, float y){

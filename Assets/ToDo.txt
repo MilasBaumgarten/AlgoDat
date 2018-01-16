@@ -1,0 +1,7 @@
+AnimateEdge:
+    - usedCapacity = flow
+    - maxCapacity = ?
+        - auslesen aus Edge Klasse
+    - Snap am Ender der Animation
+        - Distance inkorrekt?
+    - Anleitung wie Prefab benutzen
