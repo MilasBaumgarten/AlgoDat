@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class AnimateEdge : MonoBehaviour {
 
-	// Dauer der Animation
-	public float animationDuration = 1f;
 	private float currentTime = 0f;
 	public float speed = 3f;
 
@@ -17,10 +15,12 @@ public class AnimateEdge : MonoBehaviour {
 	bool animating = false;
 
 	// verkürze Kommunikation mit LineRenderer Komponente über Variable
-	LineRenderer line;
+	LineRenderer main_line;
+	LineRenderer animated_line;
 
 	void Start(){
-		line = GetComponent<LineRenderer>();
+		main_line = GetComponent<LineRenderer>();
+		animated_line = transform.GetChild(0).GetComponent<LineRenderer>();
 	}
 
 	void LateUpdate () {
@@ -31,18 +31,19 @@ public class AnimateEdge : MonoBehaviour {
 
 	void animate(){
 		// speichere Startpunkt um Zielpunktberechnung übersichtlicher zu machen
-			Vector2 start = line.GetPosition(0);
+			Vector2 start = main_line.GetPosition(0);
 			// setze und berechne Zielpunkt
 			//	- errechne Richtungsvektor (normalisiert)
 			//	- multipliziere Richtungsvektor mit Geschwindigkeit und vergangener Zeit
-			line.SetPosition(1, start + (destinationPos - start).normalized * speed * currentTime);
+			// -1 bei z, damit farbige Kante vor grauer Kante gezeichnet wird
+			animated_line.SetPosition(1, new Vector3(start.x, start.y, -1) + (new Vector3(destinationPos.x - start.x, destinationPos.y - start.y, -1)).normalized * speed * currentTime);
 
 			// erhöhe "Zeitmessung"
 			currentTime += Time.deltaTime;
 
 			// Animation ist beendet, sobald wirkliche Länge der Kante > gewollte Länge
-			if (Vector2.Distance(start, destinationPos) < Vector2.Distance(start, line.GetPosition(1))){
-				line.SetPosition(1, destinationPos);
+			if (Vector3.Distance(start, new Vector3(destinationPos.x, destinationPos.y, -1)) < Vector3.Distance(start, animated_line.GetPosition(1))){
+				animated_line.SetPosition(1, new Vector3(destinationPos.x, destinationPos.y, -1));
 				animating = false;
 				currentTime = 0;
 			}
@@ -51,20 +52,25 @@ public class AnimateEdge : MonoBehaviour {
 	// rufe auf um Animation der Kante zu starten
 	public void startAnimation(){
 		animating = true;
+		animated_line.SetPosition(0, transform.position + Vector3.back);
 	}
 
 //#####################################################################
 // GET			SET
 
 	// übergebe Zielposition bzw. Ende der Kante
-	// Startposition = transform.position (schon bei der Initialisierung gesetzt)
 	public void setDestination(float x, float y){
+		// Startposition = transform.position
+		main_line.SetPosition(0, transform.position);
+		// verstecke Kante hinter grauer Kante, wenn nicht animiert wird
+		animated_line.SetPosition(0, transform.position + Vector3.forward);
+
 		// Teste ob Start == Ziel
 		// sollte NIE gewollt sein, sonst ist keine Animation möglich
-		if (line.GetPosition(0) != new Vector3(x,y,0)){
+		if (main_line.GetPosition(0) != new Vector3(x,y,0)){
 			destinationPos = new Vector2(x,y);
 
-			line.SetPosition(1, destinationPos);
+			main_line.SetPosition(1, destinationPos);
 		}
 		else{
 			Debug.LogError( "Zielposition darf NICHT gleich Startposition sein!! Wurde auf (0,0,0) gesetzt.\n" +
@@ -79,4 +85,3 @@ public class AnimateEdge : MonoBehaviour {
 		return !animating;
 	}
 }
-//23:30
