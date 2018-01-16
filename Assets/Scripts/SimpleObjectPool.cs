@@ -18,7 +18,7 @@ public class SimpleObjectPool : MonoBehaviour
     // Returns an instance of the prefab
     public GameObject GetObject(Transform contentPanel) //hier erfolgte eine kleine Änderung seitens der Entwicklerin
     {
-        GameObject spawnedGameObject = prefab;
+        GameObject spawnedGameObject;
 
         // if there is an inactive instance of the prefab ready to return, return that
         if (inactiveInstances.Count > 0)
