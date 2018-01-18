@@ -34,18 +34,22 @@ namespace Event{
 
 
 		public override IEnumerator Run() {
-			Debug.Log("animate");
-
 			main_line = thisEdge.GetComponent<LineRenderer>();
 			animated_line = thisEdge.transform.GetChild(0).GetComponent<LineRenderer>();
 
+// TODO		get from other scripts
 			setDestination(Random.Range(-5,5), Random.Range(-5,5));
 			setMaxCapacity(5);
+			Debug.Log(maxCapacity + "_" + usedCapacity);
+
+			animated_line.material.EnableKeyword("_EMISSION");
+			animated_line.material.SetColor("_EmissionColor", new Color((float)usedCapacity/maxCapacity, 1.0f - (float)usedCapacity/maxCapacity, 0));
 
 			while (animating){
 				animate();
 				yield return new WaitForEndOfFrame();
 			}
+			clean();
 		}
 
 		void animate(){
@@ -73,28 +77,26 @@ namespace Event{
 				}
 		}
 
-		// rufe auf um Animation der Kante zu starten
-		public void startAnimation(){
-			animating = true;
-			animated_line.SetPosition(0, thisEdge.transform.position + Vector3.back);
+		void clean(){
+			main_line.material.EnableKeyword("_EMISSION");
+			Debug.Log(((float)usedCapacity/maxCapacity) + "_" + (1.0f - (float)usedCapacity/maxCapacity));
+			main_line.material.SetColor("_EmissionColor", new Color((float)usedCapacity/maxCapacity, 1.0f - (float)usedCapacity/maxCapacity, 0));
 
-			// Ändere Farbe abhängig von Kapazität
-			usedCapacity ++;
-			animated_line.material.EnableKeyword("_EMISSION");
-			Debug.Log((float)1-usedCapacity/maxCapacity + " _ " + (float)usedCapacity/maxCapacity);
-			animated_line.material.SetColor("_EmissionColor", new Color((float)usedCapacity/maxCapacity, (float)1-usedCapacity/maxCapacity, 0));
+			animated_line.SetPosition(0, main_line.GetPosition(0) + Vector3.forward);
+			animated_line.SetPosition(1, main_line.GetPosition(1) + Vector3.forward);
 		}
 
 	//#####################################################################
 	// GET			SET
 
-		public AnimateEdge(GameObject edge){
+		public AnimateEdge(GameObject edge, int usedCapacity){
 			this.thisEdge = edge;
+			this.usedCapacity = usedCapacity;
 		}
 
 		// setze Kapazität bis Maximalwert
 		public void setMaxCapacity(int capacity){
-			maxCapacity = capacity;
+			this.maxCapacity = capacity;
 			main_line.widthMultiplier = Mathf.Min(capacity * widthMultiplier, maxWidth);
 			animated_line.widthMultiplier = Mathf.Min(capacity * widthMultiplier, maxWidth);
 		}
