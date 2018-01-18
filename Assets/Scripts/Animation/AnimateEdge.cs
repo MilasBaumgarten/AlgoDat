@@ -15,13 +15,6 @@ namespace Event{
 
 		// WEGEN ANIMATION QUEUE
 		private GameObject thisEdge;
-
-		[Header("Capacity")]
-		// Kapazität der Kante
-		[SerializeField]
-		private float widthMultiplier = 1;
-		[SerializeField]
-		private float maxWidth = 2;
 		private int maxCapacity = -1;
 		private int usedCapacity = 0;
 
@@ -37,10 +30,10 @@ namespace Event{
 			main_line = thisEdge.GetComponent<LineRenderer>();
 			animated_line = thisEdge.transform.GetChild(0).GetComponent<LineRenderer>();
 
-// TODO		get from other scripts
-			setDestination(Random.Range(-5,5), Random.Range(-5,5));
-			setMaxCapacity(5);
-			Debug.Log(maxCapacity + "_" + usedCapacity);
+			animated_line.SetPosition(0, main_line.GetPosition(0) + Vector3.back);
+			animated_line.SetPosition(1, main_line.GetPosition(0) + Vector3.back);
+
+			destinationPos = new Vector2(main_line.GetPosition(1).x, main_line.GetPosition(1).y);
 
 			animated_line.material.EnableKeyword("_EMISSION");
 			animated_line.material.SetColor("_EmissionColor", new Color((float)usedCapacity/maxCapacity, 1.0f - (float)usedCapacity/maxCapacity, 0));
@@ -61,7 +54,8 @@ namespace Event{
 				// -1 bei z, damit farbige Kante vor grauer Kante gezeichnet wird
 				Vector3 direction = new Vector3(start.x, start.y, 0) + (new Vector3(destinationPos.x - start.x, destinationPos.y - start.y, 0)).normalized;
 				direction *= speed * currentTime;
-				direction.z = -1;
+				Debug.DrawRay(start, direction, Color.green);
+				Debug.DrawLine(start, destinationPos, Color.red);
 				animated_line.SetPosition(1, direction);
 
 				// erhöhe "Zeitmessung"
@@ -79,7 +73,6 @@ namespace Event{
 
 		void clean(){
 			main_line.material.EnableKeyword("_EMISSION");
-			Debug.Log(((float)usedCapacity/maxCapacity) + "_" + (1.0f - (float)usedCapacity/maxCapacity));
 			main_line.material.SetColor("_EmissionColor", new Color((float)usedCapacity/maxCapacity, 1.0f - (float)usedCapacity/maxCapacity, 0));
 
 			animated_line.SetPosition(0, main_line.GetPosition(0) + Vector3.forward);
@@ -92,34 +85,6 @@ namespace Event{
 		public AnimateEdge(GameObject edge, int usedCapacity){
 			this.thisEdge = edge;
 			this.usedCapacity = usedCapacity;
-		}
-
-		// setze Kapazität bis Maximalwert
-		public void setMaxCapacity(int capacity){
-			this.maxCapacity = capacity;
-			main_line.widthMultiplier = Mathf.Min(capacity * widthMultiplier, maxWidth);
-			animated_line.widthMultiplier = Mathf.Min(capacity * widthMultiplier, maxWidth);
-		}
-
-		// übergebe Zielposition bzw. Ende der Kante
-		public void setDestination(float x, float y){
-			// Startposition = transform.position
-			main_line.SetPosition(0, thisEdge.transform.position);
-			// verstecke Kante hinter grauer Kante, wenn nicht animiert wird
-			animated_line.SetPosition(0, thisEdge.transform.position + Vector3.back);
-
-			// Teste ob Start == Ziel
-			// sollte NIE gewollt sein, sonst ist keine Animation möglich
-			if (main_line.GetPosition(0) != new Vector3(x,y,0)){
-				destinationPos = new Vector2(x,y);
-
-				main_line.SetPosition(1, destinationPos);
-			}
-			else{
-				Debug.LogError( "Zielposition darf NICHT gleich Startposition sein!! Wurde auf (0,0,0) gesetzt.\n" +
-								"- LG Milas");
-			}
-			
 		}
 
 		// gibt zurück ob Animation abgeschlossen ist

@@ -8,7 +8,14 @@ public class CController : MonoBehaviour {
 	//Knoten reseten nachdem 2 ausgewählt wurden ohne Edge zu erstellen programmieren
 
 
+    [Header("Kanten Variablen")]
     public GameObject edge; // Gameobjekt für Kante
+    // Kapazität der Kante
+    [SerializeField]
+    private float maxWidth = 2;
+    private float widthMultiplier = 1;
+
+    [Header("Knoten Variablen")]
     public GameObject node; // Gameobjekt für Knoten
     public int nodeNumber = 1;
     public float timeWindow = 0.25f; // Zeitinterval für doppelklicks
@@ -116,13 +123,12 @@ public class CController : MonoBehaviour {
         }
         else
         {
-            Quaternion aimRotation = Quaternion.LookRotation(aim); // Anpassen der Rotation damit sie in Richtung des Knotens zeigt
-//!!!
-
-            edge.transform.localScale = new Vector3(0.3f, 0.25f, (Vector3.Distance(v1, v2)) / 2);// Skalierung des Prefabs
-//!!!
-            GameObject edgeObject = Instantiate(edge, new Vector3(pos.x, pos.y, 1), aimRotation); // Erstellen der Kante (edge aus Prefab, von Mittelpunkt 
+            GameObject edgeObject = Instantiate(edge, new Vector3(v1.x, v1.y, 0), new Quaternion()); // Erstellen der Kante (edge aus Prefab, von Mittelpunkt 
                                                                                                   // zwischen den Knoten, Rotation in Richtung der Knoten)
+            // setze Werte für Kanten
+            // TODO: übergebe maximale Kapazität (3. Parameter)
+            constructEdge(edgeObject.GetComponent<LineRenderer>(), edgeObject.transform.GetChild(0).GetComponent<LineRenderer>(), 2);
+
             edgeObject.name = edgeObject.name.Replace("(Clone)", "");
             edgeObject.name = GetNode1(v1) + " und " + GetNode2(v2);
             Edge e = new Edge(v1, v2, edgeObject.name, 1, 1, false);
@@ -169,4 +175,19 @@ public class CController : MonoBehaviour {
         }
         return null;
     }*/
+
+    // Werte der Edge einstellen
+    private void constructEdge(LineRenderer edge, LineRenderer animationEdge, int capacity){
+        // setze Start und Endpunkt der Kante
+        edge.SetPosition(0, v1);
+        edge.SetPosition(1, v2);
+        // setze Start und Endpunkt der Animationskante
+        animationEdge.SetPosition(0, v1 + Vector3.forward);
+        animationEdge.SetPosition(1, v2 + Vector3.forward);
+        
+        //maximale Kapazität einstellen
+        edge.widthMultiplier = Mathf.Min(capacity * widthMultiplier, maxWidth);
+        animationEdge.widthMultiplier = Mathf.Min(capacity * widthMultiplier, maxWidth);
+    }
+
 }
