@@ -24,6 +24,7 @@ public class FordFulkerson : MonoBehaviour { //Erstellt von Tim und Sebastian
 			MaxFlow = 0;
 			Array.Clear (Waybackward);
 			Array.Clear	(Wayforward);
+			
 
 			for (int i = 0; i < getAllEdges().Length; i++) {  //Flow aller Edges auf 0 setzen; wird standartmaessig mit 0 belegt
 				allEdges [i].setFlow () = 0;
@@ -38,13 +39,13 @@ public class FordFulkerson : MonoBehaviour { //Erstellt von Tim und Sebastian
 	public void fordFulkerson(bool walkThrough){ // eigentlicher Algorithmus, Walkthrough Variable gibt Auskunft darüber, welche Darstellungsart Nutzer angecklickt hat -> Schrittweise oder am Stück
 		vorarbeit (); // oben vorbereitet und erläuterte Vorarbeit einmalig ausführen vor Start 
 		if (run) { // Test, ob Algorithmus noch ausgeführt werden soll bzw. darf
-			Node actualN = List.getSource (); // aktuell betrachteter Knoten ist die gewählte Quelle
+					Node actualN = List.getSource (); // aktuell betrachteter Knoten ist die gewählte Quelle
 			Edge[] connectedEdges = actualN.getConnectedEdges (); // mit Quellknoten verbundene Kanten werden ermittelt und zwischengespeichert
 			
 
 			for (int i = 0; i < connectedEdges.Lenght; i++) { //iterieren über alle am Knoten anliegenden Kanten
 
-				if (connectedEdges[i].getisVisited ==false && connectedEdges [i].getFlow < connectedEdges [i].getCapacityMax) { // Check ob aktuell betrachtete Kante noch freie Kapazitäten für den Fluss hat, erste passende Kante wird gewählt
+				if (connectedEdges[i].getisVisited ==false && connectedEdges[i].getEnd() != actualN && connectedEdges [i].getFlow < connectedEdges [i].getCapacityMax) { // Check ob aktuell betrachtete Kante noch freie Kapazitäten für den Fluss hat, erste passende Kante wird gewählt
 					//Blink gewählter passender Edge hier noch implementieren !!! Eigene Methode ???
 					
 					Edge actualEdge = connectedEdges [i]; // Auswahl erster passender zu betrachtender Edge
@@ -52,9 +53,6 @@ public class FordFulkerson : MonoBehaviour { //Erstellt von Tim und Sebastian
 						if(actualN == actualEdge.getStart){
 							Wayforward.add (actualEdge);// ausgewählte Kante wird dem Wegearray hinzugefügt und sich gemerkt, um später den Weg von Queelle zu Senke rekonstruieren zu können
 							actualEdge.setisVisited(true);					
-						}else if(actualN == actualEdge.getEnd){
-							Waybackward.add (actualEdge);// ausgewählte Kante wird dem Wegearray hinzugefügt und sich gemerkt, um später den Weg von Queelle zu Senke rekonstruieren zu können
-							actualEdge.setisVisited(true);	
 						}
 						actualN = actualEdge.getEnd ();// zu betrachtender Knoten wird gewechselt auf den Knoten, der am Ende der Edge befindlich ist  (Frage bei Rückläufigen Edges???)
 					
@@ -75,7 +73,7 @@ public class FordFulkerson : MonoBehaviour { //Erstellt von Tim und Sebastian
 				Edge[] connectedEdges = actualN.getConnectedEdges (); // mit Quellknoten verbundene Kanten werden ermittelt und zwischengespeichert, bereits besuchte Kanten von Betrachtung ausschliessen??? -> Edge[] connectedEdges = actualN.getConnectedEdges ()- Way[]; ???
 
 				for (int i = 0; i < connectedEdges.Lenght; i++) {//iterieren über alle am Knoten anliegenden Kanten
-					if (connectedEdges[i].getisVisited ==false && connectedEdges [i].getFlow < connectedEdges [i].getCapacityMax) {// Check ob aktuell betrachtete Kante noch freie Kapazitäten für den Fluss hat, erste passende Kante wird gewählt
+					if (connectedEdges[i].getisVisited ==false && connectedEdges [i].getFlow < connectedEdges [i].getCapacityMax()) {// Check ob aktuell betrachtete Kante noch freie Kapazitäten für den Fluss hat, erste passende Kante wird gewählt
 						//Blink gewählter passender Edge hier noch implementieren !!! Eigene Methode ???
 						
 						Edge actualEdge = connectedEdges [i];// Auswahl erster passender zu betrachtender Edge
@@ -84,10 +82,10 @@ public class FordFulkerson : MonoBehaviour { //Erstellt von Tim und Sebastian
 						if (minimalFlow > leftCapacity) { //Test ob dynamischer Wert des kleinsten im Durchlauf verwendeten Flusses erneuert werden muss
 							minimalFlow = leftCapacity; //Wenn ja, wird dieser durch den aktuell verbleibenden Fluss auf der Edge ersetzt
 						}
-						if(actualN == actualEdge.getStart){
+						if(actualN == actualEdge.getStart()){
 							Wayforward.add (actualEdge);// ausgewählte Kante wird dem Wegearray hinzugefügt und sich gemerkt, um später den Weg von Queelle zu Senke rekonstruieren zu können
 							actualEdge.setisVisited(true);
-						}else if(actualN == actualEdge.getEnd){
+						}else if(actualN == actualEdge.getEnd() &&actualEdge.getFlow() != 0) {
 							Waybackward.add (actualEdge);// ausgewählte Kante wird dem Wegearray hinzugefügt und sich gemerkt, um später den Weg von Queelle zu Senke rekonstruieren zu können
 							actualEdge.setisVisited(true);
 						}
