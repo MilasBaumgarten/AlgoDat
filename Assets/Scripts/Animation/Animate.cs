@@ -12,7 +12,7 @@ public class Animate : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.Space)){
 			if (edge != null){
 				usedCapacity ++;
-				GetComponent<AnimationManager>().Add(new AnimateEdge(edge, usedCapacity));
+				GetComponent<AnimationManager>().Add(new FillEdgeForward(edge, usedCapacity));
 			}
 		}
 

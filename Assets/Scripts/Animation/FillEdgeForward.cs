@@ -3,7 +3,7 @@ using UnityEngine;
 using Model;
 
 namespace Event{
-	public class AnimateEdge : BasicAction {
+	public class FillEdgeForward : BasicAction {
 
 		[Header("Animation")]
 		// Animationsgeschwindigkeit und Zeit
@@ -23,7 +23,7 @@ namespace Event{
 		private LineRenderer animated_line;
 
 		// Konstruktor, um Parameter zu übergeben
-		public AnimateEdge(GameObject edge, int usedCapacity){
+		public FillEdgeForward(GameObject edge, int usedCapacity){
 			this.thisEdge = edge;
 			this.usedCapacity = usedCapacity;
 		}
