@@ -6,20 +6,34 @@ using UnityEngine;
 public class VertexEdgeNameGen : MonoBehaviour {
 
     //Buchstaben, welche den Anfang der generierten Namen bilden
-    private string edgeChar = "E";
-    private string vertexChar = "V";
+    private string edgeChar = "Kante ";
+    private string vertexChar = "Knoten ";
+
+    //CController, um nodeNumber auszulesen
+    private CController ccont;
 
     //Nummern, welche das Ende der generierten Namen bilden
-    private int edgeNum = 1;
-    private int vertexNum = 1;
+    private int edgeNum;
+    private int vertexNum;
 
     //Namen, welche am Ende der Methode zurückgegeben werden
     private string edgeName = "";
     private string vertexName = "";
 
+    void Start()
+    {
+        ccont = GameObject.Find("GraphController").GetComponent<CController>();
+        edgeNum = 1;
+    }
+
     //Update-Methode nur zum Testen
     void Update()
     {
+        if(vertexNum != ccont.nodeNumber)
+        {
+            vertexNum = ccont.nodeNumber;
+        }
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             GenerateEdgeName();
@@ -47,8 +61,6 @@ public class VertexEdgeNameGen : MonoBehaviour {
     {
         //Zusammensetzen des Strings
         vertexName = vertexChar + vertexNum.ToString();
-        //Zahlenwert inkrementieren
-        vertexNum++;
         //Testausgabe in der Konsole
         Debug.Log("Vertex: " + vertexName);
         //String zurückgeben
