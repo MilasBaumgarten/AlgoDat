@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - RowPrefab
+  - EdgeContent
+  - Node
+  - AddEdge
+  - AddVertex
+  - VertexContent
   layers:
   - Default
   - TransparentFX
