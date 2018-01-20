@@ -328,6 +328,7 @@ public class CController : MonoBehaviour {
 		{
 			if(n.getName() == edge.getStart() || n.getName() == edge.getEnd())
 			{
+              Debug.Log("Node: " +n.getName()+ "   "+ edge.getEdgeName());  
 				n.cEdges.Add (edge);
 			}
 		}
@@ -346,8 +347,7 @@ public class CController : MonoBehaviour {
         {
             if (n.nodePosition == nodePosition){
                 return n.nodeName;
-            }
-            return null;  
+            } 
         }
         return null;
     }
@@ -359,7 +359,6 @@ public class CController : MonoBehaviour {
             {
                 return n;
             }
-             return null;
             
             
         }
