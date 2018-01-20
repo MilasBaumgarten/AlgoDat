@@ -27,7 +27,7 @@ public class CController : MonoBehaviour {
     Vector3 mousePos = new Vector3(0, 0, 0); // Raumvektor für Mausposition
     public int vertexCount = 0; //Tatsächliche Anzahl der Knoten
 
-    public Edge e;
+    public Edge e = new Edge("", "", "", -1, -1, false);
     public Node n;
 
     public List<Node> nodes = new List<Node>();
@@ -182,14 +182,8 @@ public class CController : MonoBehaviour {
 
     public void removeGraph()
 	{
-		foreach (Node n in nodes) 
-		{
-			nodes.Remove(n);
-		}
-		foreach (Edge e in edges) 
-		{
-			edges.Remove(e);
-		}
+        nodes = new List<Node>();
+        edges = new List<Edge>();
 	}
 
 	public void removeNode(string name)
@@ -247,7 +241,8 @@ public class CController : MonoBehaviour {
 
 	public void createStandardNode(Vector3 position, bool source,bool sink)
 	{
-		Vector3 objectPos = position; // Übertragen auf Weltkamera 
+		Vector3 objectPos = position; // Übertragen auf Weltkamera
+        objectPos.z = -1;    // setze Tiefe von Knoten auf -1, um immer vor allem zu sein
 		Quaternion spawnRotation = Quaternion.identity; // Standard rotation 
 		GameObject nodeObject = Instantiate(node, objectPos, spawnRotation); // Erstellen von Knoten(node aus Prefab, Mausposition, Standardrotation)
 
@@ -310,14 +305,6 @@ public class CController : MonoBehaviour {
         {
             GameObject edgeObject = Instantiate(edge, new Vector3(v1.x, v1.y, 0), new Quaternion()); // Erstellen der Kante (edge aus Prefab, von Mittelpunkt 
                                                                                                   // zwischen den Knoten, Rotation in Richtung der Knoten)
-            // setze Werte für Kanten
-            // TODO: übergebe maximale Kapazität (3. Parameter)
-            /*constructEdge(edgeObject.GetComponent<LineRenderer>(), edgeObject.transform.GetChild(0).GetComponent<LineRenderer>(), 2);
-
-            edgeObject.name = edgeObject.name.Replace("(Clone)", "");
-            edgeObject.name = GetNode(v1) + " und " + GetNode2(v2);
-            Edge e = new Edge(v1, v2, edgeObject.name, 1, 1, false);
-			edges.Add (e);*/
             constructEdge(edgeObject.GetComponent<LineRenderer>(), edgeObject.transform.GetChild(0).GetComponent<LineRenderer>(), 2);
             edgeObject.name = edgeObject.name.Replace("(Clone)", "");
             edgeObject.name = GetNode(v1) + " zu " + GetNode(v2);
@@ -429,6 +416,18 @@ public class CController : MonoBehaviour {
         // setze Start und Endpunkt der Animationskante
         animationEdge.SetPosition(0, v1 + Vector3.forward);
         animationEdge.SetPosition(1, v2 + Vector3.forward);
+
+        // setze Pfeil
+        edge.transform.GetChild(1).transform.position = new Vector3(v1.x, v1.y, 0);
+        // rotiere Pfeil in Richtung des Endpunktes
+        Vector2 arrowDirection = (v2 - edge.transform.GetChild(1).transform.position).normalized;
+        float angle = Mathf.Atan2(arrowDirection.y, arrowDirection.x) * -Mathf.Rad2Deg + 90;
+        edge.transform.GetChild(1).transform.rotation = Quaternion.AngleAxis(angle, Vector3.back);
+
+        // verschiebe Pfeile in Richtung des Endpunktes
+        float offset = 0.162f;
+        edge.transform.GetChild(1).transform.position += new Vector3(arrowDirection.x * offset, arrowDirection.y * offset, 0);
+
         
         //maximale Kapazität einstellen
         edge.widthMultiplier = Mathf.Min(capacity * widthMultiplier, maxWidth);
