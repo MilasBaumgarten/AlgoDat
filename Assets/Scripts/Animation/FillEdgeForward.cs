@@ -4,7 +4,9 @@ using Model;
 
 namespace Event{
 	public class FillEdgeForward : BasicAction {
-		private float currentTime = 0f;
+
+		// momentane Position des Kantenendes während der Animation
+		private Vector3 currentPos;
 		// ob Kante gerade animiert wird
 		private bool animating = true;
 
@@ -34,6 +36,8 @@ namespace Event{
 			animated_line.SetPosition(0, main_line.GetPosition(0) + Vector3.back);
 			animated_line.SetPosition(1, main_line.GetPosition(0) + Vector3.back);
 
+			currentPos = animated_line.GetPosition(0);
+
 			// färbe Animationskante ein
 			animated_line.material.EnableKeyword("_EMISSION");
 			animated_line.material.SetColor("_EmissionColor", new Color((float)flow/maxCapacity, 1.0f - (float)flow/maxCapacity, 0));
@@ -46,25 +50,23 @@ namespace Event{
 		}
 
 		void animate(){
+			Debug.Log(currentPos);
 			float speed = AnimationManager.AM.speed;
 			// errechne Richtungsvektor (normalisiert) -> Änderung des Endpunktes pro Frame
-			Vector3 direction = (main_line.GetPosition(1) - main_line.GetPosition(0)).normalized * speed * currentTime;
-			// Richtungsvektor ausgehend von Startpunkt
-			direction += main_line.GetPosition(0);
+			Vector3 direction = (main_line.GetPosition(1) - main_line.GetPosition(0)).normalized;
 			// setze Tiefe (z) auf Animationsebene (0)
 			direction.z = 0;
-			// ändere Endposition in Richtung Zielposition
-			animated_line.SetPosition(1, direction);
 
-			// erhöhe "Zeitmessung"
-			currentTime += Time.deltaTime;
+			// berechne Zielpunkt der Bewegung für diesen Frame
+			currentPos += direction * speed * Time.deltaTime;
+			// ändere Endposition in Richtung Zielposition
+			animated_line.SetPosition(1, currentPos);
 
 			// Animation ist beendet, sobald wirkliche Länge der Kante > gewollte Länge
 			if (Vector3.Distance(main_line.GetPosition(0), main_line.GetPosition(1)) <
 				Vector3.Distance(animated_line.GetPosition(0), animated_line.GetPosition(1))){
 				// beende Animation
 				animating = false;
-				currentTime = 0;
 			}
 		}
 

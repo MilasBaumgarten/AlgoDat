@@ -29,8 +29,6 @@ namespace Event{
 			this.blinkColor = blinkColor;
 			this.duration = duration;
 			this.blinkAmount = blinkAmount;
-
-			this.originalColor = edge.GetComponent<LineRenderer>().material.color;
 		}
 
 
@@ -38,7 +36,7 @@ namespace Event{
 			// vereinfacht nachfolgenden Code
 			Material mat = thisEdge.GetComponent<LineRenderer>().material;
 
-
+			this.originalColor = edge.GetComponent<LineRenderer>().material.color;
 
 			// färbe Animationskante ein
 			animated_line.material.EnableKeyword("_EMISSION");
