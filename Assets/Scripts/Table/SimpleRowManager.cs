@@ -10,10 +10,12 @@ public class SimpleRowManager : MonoBehaviour {
     public bool isEdge;
 
     private VertexEdgeNameGen nameGen;
+    private CController ccont;
 
     void Start()
     {
         nameGen = GameObject.Find("EventSystem").GetComponent<VertexEdgeNameGen>();
+        ccont = GameObject.Find("GraphController").GetComponent<CController>();
     }
 
     //Container, in welchem das Prefab instanziert werden soll
@@ -26,6 +28,8 @@ public class SimpleRowManager : MonoBehaviour {
         if (!isEdge)
             name.text = nameGen.GenerateVertexName();
         //Instanzierung des Prefabs
-        Instantiate(rowPrefab, parent.transform);
+        GameObject nodeInTable = Instantiate(rowPrefab, parent.transform);
+        nodeInTable.name = nodeInTable.name.Replace("(Clone)", "");
+        nodeInTable.name = "KnotenInTabelle " + (ccont.nodeNumber-1).ToString();
     }
 }

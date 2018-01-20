@@ -5,6 +5,10 @@ using Model;
 
 public class CController : MonoBehaviour {
 
+    //Row-Manager zum erstellen der Tabellendaten
+    SimpleRowManager rowManager;
+
+
 	//Knoten reseten nachdem 2 ausgewählt wurden ohne Edge zu erstellen programmieren
 
 
@@ -21,14 +25,15 @@ public class CController : MonoBehaviour {
     public float timeWindow = 0.25f; // Zeitinterval für doppelklicks
     public double timeBuffer = 0; // Zeit seit letzem Klick
     Vector3 mousePos = new Vector3(0, 0, 0); // Raumvektor für Mausposition
+    public int vertexCount = 0; //Tatsächliche Anzahl der Knoten
 
-	public List<Node> nodes = new List<Node>();
+    public List<Node> nodes = new List<Node>();
 	public List<Edge> edges = new List<Edge>();
     Vector3 v1 = new Vector3(0, 0, 0); // Platzhalter für Knotenposition 1
     Vector3 v2 = new Vector3(0, 0, 0); // Platzhalter für Knotenposition 2
 
-	public  void start(){
-
+	public  void Start(){
+        rowManager = GameObject.FindGameObjectWithTag("AddVertex").GetComponent<SimpleRowManager>();
 	}
 
     void Update()
@@ -102,14 +107,17 @@ public class CController : MonoBehaviour {
 //!!!
         mousePos.z = 11; // z Koordinate von Mauspos setzen
         Vector3 objectPos = Camera.main.ScreenToWorldPoint(mousePos); // Übertragen auf Weltkamera 
+        Debug.Log(mousePos);
         Quaternion spawnRotation = Quaternion.identity; // Standard rotation 
         GameObject nodeObject = Instantiate(node, objectPos, spawnRotation); // Erstellen von Knoten(node aus Prefab, Mausposition, Standardrotation)
         nodeObject.name = nodeObject.name.Replace("(Clone)", "");
         nodeObject.name = "Knoten " + nodeNumber;
         Node n = new Node(objectPos, "Knoten " + nodeNumber, false, false);
         nodeNumber++;
+        vertexCount++;
         nodes.Add(n);
         Debug.Log("erstellt");
+        rowManager.InstantiateObject();
     }
 
     public void CreateEdge()
