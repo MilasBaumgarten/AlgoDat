@@ -11,14 +11,33 @@ namespace Model
         public Vector3 nodePosition;
         public string nodeName;
         public bool isSource;
-        public bool isSenke;
+        public bool isSink;
+        public List<Edge> cEdges = new List<Edge>();
 
-		public Node (Vector3 nodePosition, string nodeName, bool isSource, bool isSenke)
+		public Node (Vector3 nodePosition, string nodeName, bool isSource, bool isSink)
 		{
             this.nodePosition = nodePosition;
             this.nodeName = nodeName;
             this.isSource = isSource;
-            this.isSenke = isSenke;
+            this.isSink = isSink;
+		}
+
+            public bool getSource()
+		{
+			return isSource;
+		}
+
+		public bool getSink()
+		{
+			return isSink;
+		}
+		public string getName()
+		{
+			return nodeName;
+		}
+
+		public List<Edge> getconnectedEdges(){
+			return cEdges;
 		}
 	}
 }
