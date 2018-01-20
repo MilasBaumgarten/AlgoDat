@@ -12,8 +12,7 @@ public class Animate : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.Space)){
 			if (edge != null){
 				flow ++;
-				//GetComponent<AnimationManager>().Add(new FillEdgeForward(edge, flow));
-				AnimationManager.AM.addAnimation(new FillEdgeForward(edge, flow, 3));
+				AnimationManager.AM.addAnimation(new FillEdgeForward(edge, flow, 10));
 				Debug.Log(flow);
 			}
 		}

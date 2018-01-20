@@ -27,6 +27,10 @@ ExportedObj/
 *.pidb.meta
 *.pdb.meta
 
+# unneccesary Blend files
+*.blend1
+*.blend1.meta
+
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
 

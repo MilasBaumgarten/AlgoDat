@@ -264,6 +264,7 @@ public class CController : MonoBehaviour {
 
 		constructEdge(edgeObject.GetComponent<LineRenderer>(), edgeObject.transform.GetChild(0).GetComponent<LineRenderer>(), 2, v1, v2);
 		edgeObject.name = edgeObject.name.Replace("(Clone)", "");
+        Debug.Log(nodes.Count);
 		edgeObject.name = GetNode(v1) + " zu " + GetNode(v2);
 
 		e = new Edge(GetNode(v1), GetNode(v2), edgeObject.name, capacity, flow, false);
@@ -352,19 +353,6 @@ public class CController : MonoBehaviour {
     { 
 		return edges;
     }
-
-    /*private string ConnectedEdges(Vector3 nodePosition)
-    {
-        for (int es = 0; es <)
-        {
-            foreach (Edge e in edges)
-            {
-                if (e.vectorA == nodePosition)
-                    return e.edgeName;
-            }
-        }
-        return null;
-    }*/
 
     // Werte der Edge einstellen
     private void constructEdge(LineRenderer edge, LineRenderer animationEdge, int capacity){
