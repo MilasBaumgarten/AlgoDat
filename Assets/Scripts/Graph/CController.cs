@@ -94,8 +94,14 @@ public class CController : MonoBehaviour {
             }
             else
             {
-                Debug.Log("double click");
-                CreateNode();
+                // Erzeugen von einem Strahl(Ray) an der Mausposition
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                if (!Physics.Raycast(ray)) // Wenn der Strahl was nichts trifft
+                {
+                    Debug.Log("double click");
+                    CreateNode();
+                }
             }
             timeBuffer = Time.time; //Aktuallisieren der Zeit
         }
