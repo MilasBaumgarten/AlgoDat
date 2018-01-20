@@ -6,19 +6,21 @@ using Event;
 public class Animate : MonoBehaviour {
 
 	public GameObject edge;
-	private int usedCapacity = 0;
+	private int flow = 0;
 
 	void Update () {
 		if (Input.GetKeyDown(KeyCode.Space)){
 			if (edge != null){
-				usedCapacity ++;
-				GetComponent<AnimationManager>().Add(new FillEdgeForward(edge, usedCapacity));
+				flow ++;
+				//GetComponent<AnimationManager>().Add(new FillEdgeForward(edge, flow));
+				AnimationManager.AM.addAnimation(new FillEdgeForward(edge, flow, 3));
+				Debug.Log(flow);
 			}
 		}
 
 		if (Input.GetKeyDown(KeyCode.Break)){
 			if (edge != null){
-				GetComponent<AnimationManager>().Add(new AnimateVertex());
+				GetComponent<AnimationManager>().addAnimation(new AnimateVertex());
 			}
 		}
 	}
