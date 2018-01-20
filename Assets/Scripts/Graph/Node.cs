@@ -22,12 +22,12 @@ namespace Model
             this.isSink = isSink;
 		}
 
-            public bool getSource()
+        public bool getisSource()
 		{
 			return isSource;
 		}
 
-		public bool getSink()
+		public bool getisSink()
 		{
 			return isSink;
 		}
@@ -36,7 +36,7 @@ namespace Model
 			return nodeName;
 		}
 
-		public List<Edge> getconnectedEdges(){
+		public List<Edge> getConnectedEdges(){
 			return cEdges;
 		}
 	}

@@ -67,7 +67,7 @@ public class CController : MonoBehaviour {
             {
                 Debug.Log(edges[i].getStart());
 				Debug.Log(edges[i].getEnd());
-				Debug.Log(nodes[i].getconnectedEdges());
+				//Debug.Log(nodes[i].getconnectedEdges());
                 /*Debug.Log(GetCapacity(i));
                 Debug.Log(GetFlow(i));
                 Debug.Log(GetSource(i));
@@ -225,12 +225,12 @@ public class CController : MonoBehaviour {
 		Vector3 v5 = new Vector3(4, -2, 1);
 		Vector3 v6 = new Vector3(6, 0, 1);
 		
-		createStandardNode (v1);
-		createStandardNode (v2);
-		createStandardNode (v3);
-		createStandardNode (v4);
-		createStandardNode (v5);
-		createStandardNode (v6);
+		createStandardNode (v1, true, false);
+		createStandardNode (v2, false, false);
+		createStandardNode (v3, false, false);
+		createStandardNode (v4, false, false);
+		createStandardNode (v5, false, false);
+		createStandardNode (v6, false, true);
 
 		createStandardEdge (v1, v2, 10, 0);
 		createStandardEdge (v1, v3, 10, 0);
@@ -241,9 +241,11 @@ public class CController : MonoBehaviour {
 		createStandardEdge (v5, v4, 6, 0);
 		createStandardEdge (v5, v6, 10, 0);
 		createStandardEdge (v4, v6, 10, 0);
+
+
 	}
 
-	public void createStandardNode(Vector3 position)
+	public void createStandardNode(Vector3 position, bool source,bool sink)
 	{
 		Vector3 objectPos = position; // Übertragen auf Weltkamera 
 		Quaternion spawnRotation = Quaternion.identity; // Standard rotation 
@@ -252,7 +254,7 @@ public class CController : MonoBehaviour {
 		nodeObject.name = nodeObject.name.Replace("(Clone)", ""); // Clone im Namen entfernen
 		nodeObject.name = "v" + nodeNumber; // Knoten einen einzigartigen Namen zuweisen 
 
-		n = new Node(objectPos, "v" + nodeNumber, false, false); // Objekt mit Parametern erstellen
+		n = new Node(objectPos, "v" + nodeNumber, source, sink); // Objekt mit Parametern erstellen
 		nodeNumber++;
 		nodes.Add(n); //Objekt in Liste hinzufügen
 	}
@@ -355,15 +357,51 @@ public class CController : MonoBehaviour {
     {
         foreach (Node n in nodes)
         {
-            if (n.nodePosition == nodePosition)
+            if (n.nodePosition == nodePosition){
                 return n.nodeName;
+            }
+            return null;  
         }
         return null;
     }
 
-	public List<Edge> GetAllEdges() // !!!
+    public Node GetNodeAsObject(string NodeName){
+        foreach (Node n in nodes)
+        {
+            if (n.nodeName == NodeName)
+            {
+                return n;
+            }
+             return null;
+            
+            
+        }
+        return null;
+    }
+
+	public List<Edge> getAllEdges() // !!!
     { 
 		return edges;
+    }
+
+    public Node getSource(){
+        foreach(Node n in nodes){
+            if(n.getisSource()){
+                return n;
+            }
+            
+        }
+        return null;
+    }
+
+        public Node getSink(){
+        foreach(Node n in nodes){
+            if(n.getisSink()){
+                return n;
+            }
+            
+        }
+        return null;
     }
 
     /*private string ConnectedEdges(Vector3 nodePosition)
