@@ -263,8 +263,7 @@ public class CController : MonoBehaviour {
 		// TODO: übergebe maximale Kapazität (3. Parameter)
 
 		constructEdge(edgeObject.GetComponent<LineRenderer>(), edgeObject.transform.GetChild(0).GetComponent<LineRenderer>(), 2, v1, v2);
-		edgeObject.name = edgeObject.name.Replace("(Clone)", "");
-        Debug.Log(nodes.Count);
+		//edgeObject.name = edgeObject.name.Replace("(Clone)", "");
 		edgeObject.name = GetNode(v1) + " zu " + GetNode(v2);
 
 		e = new Edge(GetNode(v1), GetNode(v2), edgeObject.name, capacity, flow, false);
@@ -344,6 +343,7 @@ public class CController : MonoBehaviour {
         foreach (Node n in nodes)
         {
             if (n.nodePosition == nodePosition)
+            //if (Mathf.Abs(Vector3.Distance(n.nodePosition, nodePosition)) < 5)
                 return n.nodeName;
         }
         return null;

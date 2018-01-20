@@ -13,7 +13,6 @@ public class Animate : MonoBehaviour {
 			if (edge != null){
 				flow ++;
 				AnimationManager.AM.addAnimation(new FillEdgeForward(edge, flow, 10));
-				Debug.Log(flow);
 			}
 		}
 
