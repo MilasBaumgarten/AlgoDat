@@ -50,7 +50,6 @@ namespace Event{
 		}
 
 		void animate(){
-			Debug.Log(currentPos);
 			float speed = AnimationManager.AM.speed;
 			// errechne Richtungsvektor (normalisiert) -> Änderung des Endpunktes pro Frame
 			Vector3 direction = (main_line.GetPosition(1) - main_line.GetPosition(0)).normalized;

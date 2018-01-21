@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Model;
+using Event;
 
 public class FordFulkerson : MonoBehaviour { //Erstellt von Tim und Sebastian
 
@@ -73,16 +74,19 @@ public class FordFulkerson : MonoBehaviour { //Erstellt von Tim und Sebastian
 				if (!connectedEdges[i].getVisited() && !connectedEdges[i].getEnd().Equals(actualN.getName()) && connectedEdges [i].getFlow() < connectedEdges [i].getCapacity()) { // Check ob aktuell betrachtete Kante noch freie Kapazitäten für den Fluss hat, erste passende Kante wird gewählt
 					//Blink gewählter passender Edge hier noch implementieren !!! Eigene Methode ???
 					Edge actualEdge = connectedEdges [i]; // Auswahl erster passender zu betrachtender Edge
+
 					minimalFlow = actualEdge.getCapacity (); // kleinster Fluss wird als Referenzwert mit der maximalen Kapazität der Quelle initialisiert, CapacityMax = Dicke des Lasers, statische Zahl aus tabelle wird dargestellt
-						if(actualN.getName().Equals(actualEdge.getStart())){
-							Debug.Log("Actual Edge: " + actualEdge.getEdgeName());	
-							Wayforward.Add (actualEdge);// ausgewählte Kante wird dem Wegearray hinzugefügt und sich gemerkt, um später den Weg von Queelle zu Senke rekonstruieren zu können
-							actualEdge.setVisited(true);
-							Debug.Log("Wayforward Länge: " + Wayforward.Count);					
-						}
-						
-						actualN = Cc.GetNodeAsObject(actualEdge.getEnd ());// zu betrachtender Knoten wird gewechselt auf den Knoten, der am Ende der Edge befindlich ist  (Frage bei Rückläufigen Edges???)				
-					
+					if(actualN.getName().Equals(actualEdge.getStart())){
+						Debug.Log("Actual Edge: " + actualEdge.getEdgeName());	
+						Wayforward.Add (actualEdge);// ausgewählte Kante wird dem Wegearray hinzugefügt und sich gemerkt, um später den Weg von Queelle zu Senke rekonstruieren zu können
+						actualEdge.setVisited(true);
+						Debug.Log("Wayforward Länge: " + Wayforward.Count);
+					}
+
+					AnimationManager.AM.addAnimation(new FillEdgeForward(connectedEdges[i].getObject(), connectedEdges[i].getFlow(), connectedEdges[i].getCapacity()));
+
+					actualN = Cc.GetNodeAsObject(actualEdge.getEnd ());// zu betrachtender Knoten wird gewechselt auf den Knoten, der am Ende der Edge befindlich ist (Frage bei Rückläufigen Edges???)
+
 					if (actualN == Cc.getSink ()) { // Test ob neuer zu betrachtender Knoten die Senke ist
 						terminate (walkThrough); // Wenn ja, terminiere den Algorithmus und starte neuen Durchlauf, da kompletter Weg von Quelle zu Senke gefunden wurde
 						break; // Abbruch übergeordneter for Schleife
@@ -97,59 +101,61 @@ public class FordFulkerson : MonoBehaviour { //Erstellt von Tim und Sebastian
 				Debug.Log("Ich bin hier!");
 			}
 
-			while (actualN != Cc.getSource ()) { // Betrachten restlicher im  Grafen verbliebener Knoten, solange diese nicht Senke oder Quelle sind
-				connectedEdges = actualN.getConnectedEdges (); // mit Quellknoten verbundene Kanten werden ermittelt und zwischengespeichert, bereits besuchte Kanten von Betrachtung ausschliessen??? -> Edge[] connectedEdges = actualN.getConnectedEdges ()- Way[]; ???
-				Node newNode = Cc.getSource();
-				for (int i = 1; i < connectedEdges.Count; i++) {//iterieren über alle am Knoten anliegenden Kanten
-					
-				
-					
-					Debug.Log("Drin0 ");
-					Debug.Log("i: " +i);
-					Debug.Log("visited: " +connectedEdges[i].getVisited());
-					Debug.Log("Flow: " +connectedEdges [i].getFlow());
-					Debug.Log("Cap: " +connectedEdges [i].getCapacity());
-					if (connectedEdges[i].getVisited() ==false && connectedEdges [i].getFlow() < connectedEdges [i].getCapacity()) {// Check ob aktuell betrachtete Kante noch freie Kapazitäten für den Fluss hat, erste passende Kante wird gewählt
-						//Blink gewählter passender Edge hier noch implementieren !!! Eigene Methode ???
-						Debug.Log("Drin1 ");
-						Edge actualEdge = connectedEdges [i];// Auswahl erster passender zu betrachtender Edge
-						leftCapacity = actualEdge.getCapacity() - actualEdge.getFlow (); // auf Edge verbleibende Kapazität wird aus der Subtraktion des aktuellen Durchflusses von der maximalen Kapazitzät errechnet
-
-						if (minimalFlow > leftCapacity) { //Test ob dynamischer Wert des kleinsten im Durchlauf verwendeten Flusses erneuert werden muss
-							minimalFlow = leftCapacity; //Wenn ja, wird dieser durch den aktuell verbleibenden Fluss auf der Edge ersetzt
-						}
-						if(actualN.getName().Equals(actualEdge.getStart())){
-							Debug.Log("Drin2 ");
-							Wayforward.Add (actualEdge);// ausgewählte Kante wird dem Wegearray hinzugefügt und sich gemerkt, um später den Weg von Queelle zu Senke rekonstruieren zu können
-							actualEdge.setVisited(true);
-							Debug.Log("Wayforward Länge: " + Wayforward.Count);
-						}else if(actualN.getName().Equals(actualEdge.getEnd()) &&actualEdge.getFlow() != 0) {
-							Waybackward.Add (actualEdge);// ausgewählte Kante wird dem Wegearray hinzugefügt und sich gemerkt, um später den Weg von Queelle zu Senke rekonstruieren zu können
-							actualEdge.setVisited(true);
-						}
-				
-						actualN = Cc.GetNodeAsObject(actualEdge.getEnd ());// zu betrachtender Knoten wird gewechselt auf den Knoten, der am Ende der Edge befindlich ist  (Frage bei Rückläufigen Edges???)
-						Debug.Log("Aktuelles n: " + actualN.getName());
-						
-						if (actualN == Cc.getSink ()) {// Test ob neuer zu betrachtender Knoten die Senke ist
-							terminate (walkThrough);// Wenn ja, terminiere den Algorithmus und starte neuen Durchlauf, da kompletter Weg von Quelle zu Senke gefunden wurde
-							
-						}
-						//break;// Abbruch übergeordneter for Schleife
-						
-
-					}
-					else if(i > connectedEdges.Count){
-						kill ();// Algorithmus beenden und maximalen Fluss ausgeben
-						break;// Abbruch übergeordneter for Schleife
-					}
-					
-						Debug.Log(i);
-				}
-				break;
-			}
+			flowThroughEdge(actualN);
 		}
 	}
+
+	private void flowThroughEdge(Node currentNode){
+		connectedEdges = currentNode.getConnectedEdges (); // mit Quellknoten verbundene Kanten werden ermittelt und zwischengespeichert, bereits besuchte Kanten von Betrachtung ausschliessen??? -> Edge[] connectedEdges = actualN.getConnectedEdges ()- Way[]; ???
+		Edge currentEdge;
+
+		for(int i = connectedEdges.Count - 1; i >= 0; i--){
+			// lösche alle eingehenden Kanten aus Auswahl (flasche Richtung)
+			if (connectedEdges[i].getEnd().Equals(currentNode.getName())){
+				connectedEdges.RemoveAt(i);
+			}
+			// lösche alle besuchten Kanten aus Auswahl
+			else if (connectedEdges[i].getVisited()){
+				connectedEdges.RemoveAt(i);
+			}
+			// lösche alle vollen Kanten aus Auswahl
+			else if (connectedEdges[i].getFlow() >= connectedEdges[i].getCapacity()){
+				connectedEdges.RemoveAt(i);
+			}
+		}
+
+		// webb noch nicht Senke/ Sackgasse gefunden
+		if (connectedEdges.Count > 0){
+			currentEdge = connectedEdges[0];
+
+			Debug.LogError(currentNode.getName() + ": " + currentEdge.getEdgeName());
+
+			Wayforward.Add (currentEdge);
+			currentEdge.setVisited(true);
+
+			leftCapacity = currentEdge.getCapacity() - currentEdge.getFlow ();
+
+			if (minimalFlow > leftCapacity) { //Test ob dynamischer Wert des kleinsten im Durchlauf verwendeten Flusses erneuert werden muss
+				minimalFlow = leftCapacity; //Wenn ja, wird dieser durch den aktuell verbleibenden Fluss auf der Edge ersetzt
+			}
+
+			AnimationManager.AM.addAnimation(new FillEdgeForward(currentEdge.getObject(), currentEdge.getFlow(), currentEdge.getCapacity()));
+
+			// durchlaufe nächste Kante
+			flowThroughEdge(Cc.GetNodeAsObject(currentEdge.getEnd()));
+		}
+		// Senke gefunden
+		else{
+			kill();
+		}
+	}
+
+/*	TESTE RÜCKWÄRTS
+else if(actualN.getName().Equals(actualEdge.getEnd()) &&actualEdge.getFlow() != 0) {
+	Waybackward.Add (actualEdge);// ausgewählte Kante wird dem Wegearray hinzugefügt und sich gemerkt, um später den Weg von Queelle zu Senke rekonstruieren zu können
+	actualEdge.setVisited(true);
+}
+*/
 
 	private void terminate(bool walkThrough){ //Terminieren des Algorithmus nach einem Erfolgreichen Durchlauf (Schritt), Walkthrough gibt abspielart an
 		MaxFlow += minimalFlow; // Inkrimentierung des Maximalen Flusses, um den, im aktuellen Durchgang, kleinsten benutzten Fluss
