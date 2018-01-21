@@ -19,6 +19,7 @@ public class SimpleDelete : MonoBehaviour {
     private ArrayList edgeEndList;
 
     private List<Node> nodes;
+    private List<Edge> edges;
 
     void Start()
     {
@@ -85,6 +86,11 @@ public class SimpleDelete : MonoBehaviour {
         
         //Da die erstellten Objekte gleich heißen, können sie m.H. ihres Namens gelöscht werden
         Destroy(GameObject.Find(parent.name));
+
+        int currentIndex = gameObject.transform.parent.GetSiblingIndex() - 1;
+        edges = ccont.GetAllEdges();
+        edges.RemoveAt(currentIndex);
+        ccont.SetAllEdges(edges);
     }
 
 }

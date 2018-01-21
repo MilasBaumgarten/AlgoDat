@@ -313,7 +313,7 @@ public class CController : MonoBehaviour {
             edgeObject.name = edgeObject.name.Replace("(Clone)", "");
             edgeObject.name = GetNode(v1) + " zu " + GetNode(v2);
 
-            e = new Edge(GetNode(v1), GetNode(v2), edgeObject.name, 1, 0, false);
+            e = new Edge(GetNode(v1), GetNode(v2), edgeObject.name, 0, 0, false);
             edges.Add(e);
 			AddCEdges(e);
 
@@ -374,6 +374,11 @@ public class CController : MonoBehaviour {
 		return edges;
     }
 
+    public void SetAllEdges(List<Edge> edges)
+    {
+        this.edges = edges;
+    }
+
     public List<Node> GetAllNodes()
     {
         return nodes;
@@ -388,6 +393,7 @@ public class CController : MonoBehaviour {
     {
         return rowManager;
     }
+
 
     // Werte der Edge einstellen
     private void constructEdge(LineRenderer edge, LineRenderer animationEdge, int capacity){
