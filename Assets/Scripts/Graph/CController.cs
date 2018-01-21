@@ -276,8 +276,8 @@ public class CController : MonoBehaviour {
         mousePos = Input.mousePosition; // Vektor aus Auslesen der Mausposition 
 //!!!
         mousePos.z = 11; // z Koordinate von Mauspos setzen
-        Vector3 objectPos = Camera.main.ScreenToWorldPoint(mousePos); // Übertragen auf Weltkamera 
-        Debug.Log(mousePos);
+        Vector3 objectPos = Camera.main.ScreenToWorldPoint(mousePos); // Übertragen auf Weltkamera
+		objectPos.z = -1;
         Quaternion spawnRotation = Quaternion.identity; // Standard rotation 
         GameObject nodeObject = Instantiate(node, objectPos, spawnRotation); // Erstellen von Knoten(node aus Prefab, Mausposition, Standardrotation)
         nodeObject.name = nodeObject.name.Replace("(Clone)", "");
@@ -361,6 +361,7 @@ public class CController : MonoBehaviour {
 
     private void constructEdge(LineRenderer edge, LineRenderer animationEdge, int capacity, Vector3 v1, Vector3 v2){
         // setze Start und Endpunkt der Kante
+		v1.z = v2.z = 0;
         edge.SetPosition(0, v1);
         edge.SetPosition(1, v2);
         // setze Start und Endpunkt der Animationskante
@@ -368,7 +369,7 @@ public class CController : MonoBehaviour {
         animationEdge.SetPosition(1, v2 + Vector3.forward);
 
         // setze Pfeil
-        edge.transform.GetChild(1).transform.position = new Vector3(v1.x, v1.y, 0);
+        edge.transform.GetChild(1).transform.position = new Vector3(v1.x, v1.y, -0.5f);
         // rotiere Pfeil in Richtung des Endpunktes
         Vector2 arrowDirection = (v2 - edge.transform.GetChild(1).transform.position).normalized;
         float angle = Mathf.Atan2(arrowDirection.y, arrowDirection.x) * -Mathf.Rad2Deg + 90;
@@ -378,6 +379,8 @@ public class CController : MonoBehaviour {
         float offset = 0.162f;
         edge.transform.GetChild(1).transform.position += new Vector3(arrowDirection.x * offset, arrowDirection.y * offset, 0);
 
+		// drehe Pfeil zu Kamera
+		edge.transform.GetChild(1).transform.Rotate(0,180,0);
         
         //maximale Kapazität einstellen
         edge.widthMultiplier = Mathf.Min(capacity * widthMultiplier, maxWidth);
