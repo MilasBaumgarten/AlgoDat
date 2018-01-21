@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 222959665092380824}
   - component: {fileID: 114651803371334474}
   m_Layer: 5
-  m_Name: Knoten 3(Edge)
+  m_Name: Knoten 1(Edge)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -161,7 +161,7 @@ GameObject:
   - component: {fileID: 222171524163514934}
   - component: {fileID: 114471719463437828}
   m_Layer: 5
-  m_Name: Knoten 2(Edge)
+  m_Name: Knoten 3(Edge)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -259,7 +259,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Kante 2
+  m_Text: Kante 6
 --- !u!114 &114358800340763562
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -366,7 +366,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Knoten 2
+  m_Text: Knoten 3
 --- !u!114 &114541297510559794
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -451,7 +451,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Knoten 3
+  m_Text: Knoten 1
 --- !u!114 &114710751647912958
 MonoBehaviour:
   m_ObjectHideFlags: 1
