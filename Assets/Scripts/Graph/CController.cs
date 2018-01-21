@@ -91,6 +91,7 @@ public class CController : MonoBehaviour {
 
                 if (Physics.Raycast(ray, out hit)) // Wenn der Strahl was trifft dann...
                 {
+                    Debug.Log(hit.collider.tag);
                     if (hit.collider.tag == "Node")// Wenn der Tag übereinstimmt dann...
                     {
                         Debug.Log("This is a Node");
@@ -283,11 +284,15 @@ public class CController : MonoBehaviour {
         nodeObject.name = nodeObject.name.Replace("(Clone)", "");
         nodeObject.name = "Knoten " + nodeNumber;
         Node n = new Node(objectPos, "Knoten " + nodeNumber, false, false);
+        nodes.Add(n);
+        //Tabelleneintrag erstellen
+        rowManager.InstantiateVertex();
         nodeNumber++;
         vertexCount++;
-        nodes.Add(n);
+        
         Debug.Log("erstellt");
-        rowManager.InstantiateObject();
+
+        
     }
 
     public void CreateEdge()
@@ -310,7 +315,9 @@ public class CController : MonoBehaviour {
             e = new Edge(GetNode(v1), GetNode(v2), edgeObject.name, 1, 0, false);
             edges.Add(e);
 			AddCEdges(e);
-           
+
+            //Tabelleneintrag erstellen
+            rowManager.InstantiateEdge();
 
             v1 = new Vector3(0, 0, 0); // Position zurücksetzen von Knotenposition 1
             v2 = new Vector3(0, 0, 0); // Position zurücksetzen von Knotenposition 2
@@ -318,7 +325,6 @@ public class CController : MonoBehaviour {
             Debug.Log("erstellt");
         }
     }
-
 
     public void AddCEdges(Edge edge)
     {
@@ -349,9 +355,27 @@ public class CController : MonoBehaviour {
         return null;
     }
 
-	public List<Edge> GetAllEdges() // !!!
+    //Getter für die Knoten eines Edges
+    public string GetV1()
+    {
+        Debug.Log("V1: " + GetNode(v1));
+        return GetNode(v1);
+    }
+
+    public string GetV2()
+    {
+        Debug.Log("V2: " + GetNode(v2));
+        return GetNode(v2);
+    }
+
+    public List<Edge> GetAllEdges() // !!!
     { 
 		return edges;
+    }
+
+    public SimpleRowManager GetRowManager()
+    {
+        return rowManager;
     }
 
     // Werte der Edge einstellen

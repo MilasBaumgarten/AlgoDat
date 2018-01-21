@@ -582,7 +582,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114291654804631416}
-        m_MethodName: DeleteObject
+        m_MethodName: DeleteVertex
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
