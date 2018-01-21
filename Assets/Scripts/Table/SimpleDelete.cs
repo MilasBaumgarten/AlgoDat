@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Model;
 
 public class SimpleDelete : MonoBehaviour {
 
@@ -17,6 +18,8 @@ public class SimpleDelete : MonoBehaviour {
     private ArrayList edgeStartList;
     private ArrayList edgeEndList;
 
+    private List<Node> nodes;
+
     void Start()
     {
         ccont = GameObject.Find("GraphController").GetComponent<CController>();
@@ -25,11 +28,20 @@ public class SimpleDelete : MonoBehaviour {
     
     public void DeleteVertex()
     {
+        nodes = ccont.GetAllNodes();
         //Auslesen der im Knoten anliegenden Kanten
         edgeStartList = rowManager.GetEdgeStartList();
         edgeEndList = rowManager.GetEdgeEndList();
         Debug.Log(gameObject.transform.parent.name);
         Debug.Log(edgeStartList.Count);
+        int currentIndex = gameObject.transform.parent.GetSiblingIndex() - 1;
+        Debug.Log("Tabel-Index: " + currentIndex);
+        nodes.RemoveAt(currentIndex);
+        Debug.Log("Nodes left: ");
+        foreach(Node n in nodes){
+            Debug.Log(n.nodeName);
+        }
+        ccont.SetAllNodes(nodes);
         /*
         for (int i = 0; i < edgeStartList.Count; i++)
         {

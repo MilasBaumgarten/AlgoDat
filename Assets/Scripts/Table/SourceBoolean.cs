@@ -2,15 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Model;
 
 public class SourceBoolean : MonoBehaviour {
 
     string parentName;
     public bool isSource;
 
+    private CController ccont;
+    private List<Node> nodes;
+    Transform thisToggle;
+
+    void Start()
+    {
+        ccont = GameObject.Find("GraphController").GetComponent<CController>();
+        thisToggle = gameObject.transform;
+    }
+
 	public void TurnOffAllOtherToggles()
     {
-        Transform thisToggle = gameObject.transform;
         isSource = thisToggle.GetComponent<Toggle>().isOn;
 
         int vertexCount = GameObject.Find("GraphController").GetComponent<CController>().vertexCount;
@@ -41,6 +51,22 @@ public class SourceBoolean : MonoBehaviour {
                 if(otherName != parentName)
                     other.Find("SourceToggle").GetComponent<Toggle>().isOn = false;
             }
+        }
+    }
+
+    public void SetSource()
+    {
+        int currentIndex = gameObject.transform.parent.GetSiblingIndex() - 1;
+        Debug.Log("Source Index: " + currentIndex);
+        nodes = ccont.GetAllNodes();
+        nodes[currentIndex].setSource(thisToggle.GetComponent<Toggle>().isOn);
+        ccont.SetAllNodes(nodes);
+        nodes = ccont.GetAllNodes();
+
+        Debug.Log("List of nodes:");
+        foreach(Node n in nodes)
+        {
+            Debug.Log(n.nodeName + ": isSource: " + n.getSource());
         }
     }
 }

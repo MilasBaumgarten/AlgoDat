@@ -285,6 +285,7 @@ public class CController : MonoBehaviour {
         nodeObject.name = "Knoten " + nodeNumber;
         Node n = new Node(objectPos, "Knoten " + nodeNumber, false, false);
         nodes.Add(n);
+        Debug.Log(nodes.IndexOf(n));
         //Tabelleneintrag erstellen
         rowManager.InstantiateVertex();
         nodeNumber++;
@@ -371,6 +372,16 @@ public class CController : MonoBehaviour {
     public List<Edge> GetAllEdges() // !!!
     { 
 		return edges;
+    }
+
+    public List<Node> GetAllNodes()
+    {
+        return nodes;
+    }
+
+    public void SetAllNodes(List<Node> nodes)
+    {
+        this.nodes = nodes;
     }
 
     public SimpleRowManager GetRowManager()

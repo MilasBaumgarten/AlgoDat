@@ -22,10 +22,20 @@ namespace Model
             this.isSink = isSink;
 		}
 
+        public void setSource(bool isSource)
+        {
+            this.isSource = isSource;
+        }
+
             public bool getSource()
 		{
 			return isSource;
 		}
+
+        public void SetSink(bool isSink)
+        {
+            this.isSink = isSink;
+        }
 
 		public bool getSink()
 		{
