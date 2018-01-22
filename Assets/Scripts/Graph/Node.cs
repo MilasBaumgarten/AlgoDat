@@ -22,12 +22,22 @@ namespace Model
             this.isSink = isSink;
 		}
 
-        public bool getisSource()
+        public void setSource(bool isSource)
+        {
+            this.isSource = isSource;
+        }
+
+            public bool getSource()
 		{
 			return isSource;
 		}
 
-		public bool getisSink()
+        public void SetSink(bool isSink)
+        {
+            this.isSink = isSink;
+        }
+
+		public bool getSink()
 		{
 			return isSink;
 		}

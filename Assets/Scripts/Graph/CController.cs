@@ -281,11 +281,16 @@ public class CController : MonoBehaviour {
         nodeObject.name = nodeObject.name.Replace("(Clone)", "");
         nodeObject.name = "Knoten " + nodeNumber;
         Node n = new Node(objectPos, "Knoten " + nodeNumber, false, false);
+        nodes.Add(n);
+        Debug.Log(nodes.IndexOf(n));
+        //Tabelleneintrag erstellen
+        rowManager.InstantiateVertex();
         nodeNumber++;
         vertexCount++;
-        nodes.Add(n);
+        
         Debug.Log("erstellt");
-        rowManager.InstantiateObject();
+
+        
     }
 
 	public void CreateEdge()
@@ -307,16 +312,18 @@ public class CController : MonoBehaviour {
 			AddCEdges(e);
 		
 
-			v1 = new Vector3(0, 0, 0); // Position zurücksetzen von Knotenposition 1
-			v2 = new Vector3(0, 0, 0); // Position zurücksetzen von Knotenposition 2
-			Debug.Log("reset");
-			Debug.Log("erstellt");
-		}
-	}
+            //Tabelleneintrag erstellen
+            rowManager.InstantiateEdge();
 
+            v1 = new Vector3(0, 0, 0); // Position zurücksetzen von Knotenposition 1
+            v2 = new Vector3(0, 0, 0); // Position zurücksetzen von Knotenposition 2
+            Debug.Log("reset");
+            Debug.Log("erstellt");
+        }
+    }
 
-	public void AddCEdges(Edge edge)
-	{
+    public void AddCEdges(Edge edge)
+    {
 		foreach (Node n in nodes) 
 		{
 			//if(n.getName() == edge.getStart() || n.getName() == edge.getEnd())
@@ -349,6 +356,23 @@ public class CController : MonoBehaviour {
 		Vector2 arrowDirection = (v2 - edge.transform.GetChild(1).transform.position).normalized;
 		float angle = Mathf.Atan2(arrowDirection.y, arrowDirection.x) * -Mathf.Rad2Deg + 90;
 		edge.transform.GetChild(1).transform.rotation = Quaternion.AngleAxis(angle, Vector3.back);
+    //Getter für die Knoten eines Edges
+    public string GetV1()
+    {
+        Debug.Log("V1: " + GetNode(v1));
+        return GetNode(v1);
+    }
+
+    public string GetV2()
+    {
+        Debug.Log("V2: " + GetNode(v2));
+        return GetNode(v2);
+    }
+
+    public List<Edge> GetAllEdges() // !!!
+    { 
+		return edges;
+    }
 
 		// verschiebe Pfeile in Richtung des Endpunktes
 		float offset = 0.162f;
@@ -359,6 +383,31 @@ public class CController : MonoBehaviour {
 		edge.widthMultiplier = Mathf.Min(capacity * widthMultiplier, maxWidth);
 		animationEdge.widthMultiplier = Mathf.Min(capacity * widthMultiplier, maxWidth);
 	}
+    public void SetAllEdges(List<Edge> edges)
+    {
+        this.edges = edges;
+    }
+
+    public List<Node> GetAllNodes()
+    {
+        return nodes;
+    }
+
+    public void SetAllNodes(List<Node> nodes)
+    {
+        this.nodes = nodes;
+    }
+
+    public SimpleRowManager GetRowManager()
+    {
+        return rowManager;
+    }
+
+
+    // Werte der Edge einstellen
+    private void constructEdge(LineRenderer edge, LineRenderer animationEdge, int capacity){
+        constructEdge(edge, animationEdge, capacity, this.v1, this.v2);
+    }
 
 	//Getter
 
