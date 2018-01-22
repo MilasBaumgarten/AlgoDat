@@ -283,6 +283,7 @@ public class CController : MonoBehaviour {
         Node n = new Node(objectPos, "Knoten " + nodeNumber, false, false);
         nodes.Add(n);
         Debug.Log(nodes.IndexOf(n));
+
         //Tabelleneintrag erstellen
         rowManager.InstantiateVertex();
         nodeNumber++;
@@ -356,7 +357,18 @@ public class CController : MonoBehaviour {
 		Vector2 arrowDirection = (v2 - edge.transform.GetChild(1).transform.position).normalized;
 		float angle = Mathf.Atan2(arrowDirection.y, arrowDirection.x) * -Mathf.Rad2Deg + 90;
 		edge.transform.GetChild(1).transform.rotation = Quaternion.AngleAxis(angle, Vector3.back);
-    //Getter für die Knoten eines Edges
+
+		// verschiebe Pfeile in Richtung des Endpunktes
+		float offset = 0.162f;
+		edge.transform.GetChild(1).transform.position += new Vector3(arrowDirection.x * offset, arrowDirection.y * offset, 0);
+		edge.transform.GetChild(1).transform.Rotate(0, 180, 0);
+		
+		//maximale Kapazität einstellen
+		edge.widthMultiplier = Mathf.Min(capacity * widthMultiplier, maxWidth);
+		animationEdge.widthMultiplier = Mathf.Min(capacity * widthMultiplier, maxWidth);
+	}
+
+	//Getter für die Knoten eines Edges
     public string GetV1()
     {
         Debug.Log("V1: " + GetNode(v1));
@@ -374,15 +386,6 @@ public class CController : MonoBehaviour {
 		return edges;
     }
 
-		// verschiebe Pfeile in Richtung des Endpunktes
-		float offset = 0.162f;
-		edge.transform.GetChild(1).transform.position += new Vector3(arrowDirection.x * offset, arrowDirection.y * offset, 0);
-		edge.transform.GetChild(1).transform.Rotate(0, 180, 0);
-		
-		//maximale Kapazität einstellen
-		edge.widthMultiplier = Mathf.Min(capacity * widthMultiplier, maxWidth);
-		animationEdge.widthMultiplier = Mathf.Min(capacity * widthMultiplier, maxWidth);
-	}
     public void SetAllEdges(List<Edge> edges)
     {
         this.edges = edges;
@@ -401,12 +404,6 @@ public class CController : MonoBehaviour {
     public SimpleRowManager GetRowManager()
     {
         return rowManager;
-    }
-
-
-    // Werte der Edge einstellen
-    private void constructEdge(LineRenderer edge, LineRenderer animationEdge, int capacity){
-        constructEdge(edge, animationEdge, capacity, this.v1, this.v2);
     }
 
 	//Getter
@@ -447,7 +444,7 @@ public class CController : MonoBehaviour {
 
 	public Node getSource(){
 		foreach(Node n in nodes){
-			if(n.getisSource()){
+			if(n.getSource()){
 				return n;
 			}
 			
@@ -457,24 +454,11 @@ public class CController : MonoBehaviour {
 
 		public Node getSink(){
 		foreach(Node n in nodes){
-			if(n.getisSink()){
+			if(n.getSink()){
 				return n;
 			}
 			
 		}
 		return null;
 	}
-
-	/*private string ConnectedEdges(Vector3 nodePosition)
-	{
-		for (int es = 0; es <)
-		{
-			foreach (Edge e in edges)
-			{
-				if (e.vectorA == nodePosition)
-					return e.edgeName;
-			}
-		}
-		return null;
-	}*/
 }
