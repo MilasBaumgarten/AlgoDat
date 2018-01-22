@@ -82,6 +82,16 @@ namespace Model
 		{
 			this.visited = visited;
 		}
+
+		public void setStart(string start)
+		{
+			this.startNode = start;
+		}
+
+		public void setEnd(string end)
+		{
+			this.endNode = end;
+		}
 	}
 }
 

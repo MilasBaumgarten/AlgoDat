@@ -17,9 +17,6 @@ public class FordFulkerson : MonoBehaviour { //Erstellt von Tim und Sebastian
 	public static Node actualN;
 	CController Cc;
 
-	int killCount = 5;
-
-
 	void Start(){
 		GameObject sd = GameObject.FindWithTag("GraphController");
 		Cc = sd.GetComponent<CController>();
@@ -32,24 +29,12 @@ public class FordFulkerson : MonoBehaviour { //Erstellt von Tim und Sebastian
 			run = true;
 			minimalFlow = 0;
 			leftCapacity = 0;
-			
-			if (Waybackward.Count > 0)
-			{
-				for (int i = 1; i < Waybackward.Count; i++)
-				{
-        			Waybackward.RemoveAt(i);
-				}
-			}
-			if (Wayforward.Count > 0)
-			{
-				for (int i = 1; i < Waybackward.Count; i++)
-				{
-        			Waybackward.RemoveAt(i);
-				}
-			}
+
+			Waybackward.Clear();
+			Wayforward.Clear();
 
 			List<Edge> allEdges =Cc.getAllEdges();
-			for (int i = 1; i < Cc.getAllEdges().Count; i++) {  //Flow aller Edges auf 0 setzen; wird standartmaessig mit 0 belegt
+			for (int i = 0; i < Cc.getAllEdges().Count; i++) {  //Flow aller Edges auf 0 setzen; wird standartmaessig mit 0 belegt
 				
 				allEdges [i].setVisited(false);
 			}
@@ -62,28 +47,20 @@ public class FordFulkerson : MonoBehaviour { //Erstellt von Tim und Sebastian
 	}
 
 	public void fordFulkerson(bool walkThrough){ // eigentlicher Algorithmus, Walkthrough Variable gibt Auskunft darüber, welche Darstellungsart Nutzer angecklickt hat -> Schrittweise oder am Stück
-		if (killCount >= 0){
-			killCount--;
-		}
-		else{
-			kill();
-			return;
-		}
-
 		vorarbeit (); // oben vorbereitet und erläuterte Vorarbeit einmalig ausführen vor Start 
 		if (run) { // Test, ob Algorithmus noch ausgeführt werden soll bzw. darf
 			actualN = Cc.getSource (); // aktuell betrachteter Knoten ist die gewählte Quelle
 			connectedEdges = actualN.getConnectedEdges (); // mit Quellknoten verbundene Kanten werden ermittelt und zwischengespeichert
 			Debug.Log("Algorithmus gestartet!");
 
-			for (int i = 1; i <= connectedEdges.Count - 1; i++) { //iterieren über alle am Knoten anliegenden Kanten
-				Debug.Log("i: " + i + " " + connectedEdges[i].getEdgeName());
+			for (int i = 0; i < connectedEdges.Count; i++) { //iterieren über alle am Knoten anliegenden Kanten
+				Debug.LogWarning("i: " + i + " " + connectedEdges[i].getEdgeName());
 				if (!connectedEdges[i].getVisited() && !connectedEdges[i].getEnd().Equals(actualN.getName()) && connectedEdges [i].getFlow() < connectedEdges [i].getCapacity()) { // Check ob aktuell betrachtete Kante noch freie Kapazitäten für den Fluss hat, erste passende Kante wird gewählt
 					//Blink gewählter passender Edge hier noch implementieren !!! Eigene Methode ???
 					Edge actualEdge = connectedEdges [i]; // Auswahl erster passender zu betrachtender Edge
-					Debug.LogWarning(connectedEdges [i].getFlow());
 
-					minimalFlow = actualEdge.getCapacity (); // kleinster Fluss wird als Referenzwert mit der maximalen Kapazität der Quelle initialisiert, CapacityMax = Dicke des Lasers, statische Zahl aus tabelle wird dargestellt
+					minimalFlow = actualEdge.getCapacity() - actualEdge.getFlow(); // kleinster Fluss wird als Referenzwert mit der maximalen Kapazität der Quelle initialisiert, CapacityMax = Dicke des Lasers, statische Zahl aus tabelle wird dargestellt
+					
 					if(actualN.getName().Equals(actualEdge.getStart())){
 						Debug.Log("Actual Edge: " + actualEdge.getEdgeName());	
 						Wayforward.Add (actualEdge);// ausgewählte Kante wird dem Wegearray hinzugefügt und sich gemerkt, um später den Weg von Queelle zu Senke rekonstruieren zu können
@@ -94,49 +71,57 @@ public class FordFulkerson : MonoBehaviour { //Erstellt von Tim und Sebastian
 					actualN = Cc.GetNodeAsObject(actualEdge.getEnd ());// zu betrachtender Knoten wird gewechselt auf den Knoten, der am Ende der Edge befindlich ist (Frage bei Rückläufigen Edges???)
 
 					flowThroughEdge(actualN);
-
-					/*if (actualN == Cc.getSink ()) { // Test ob neuer zu betrachtender Knoten die Senke ist
-						terminate (walkThrough); // Wenn ja, terminiere den Algorithmus und starte neuen Durchlauf, da kompletter Weg von Quelle zu Senke gefunden wurde
-						break; // Abbruch übergeordneter for Schleife
-					}*/
-
-					break; // Abbruch übergeordneter for Schleife
 				}
-				else if(i == connectedEdges.Count){
-					kill ();// Algorithmus beenden und maximalen Fluss ausgeben
-					break;// Abbruch übergeordneter for Schleife
-				}
-				Debug.Log("Ich bin hier!");
 			}
+			kill();
 		}
 	}
 
 	private void flowThroughEdge(Node currentNode){
-		connectedEdges = currentNode.getConnectedEdges (); // mit Quellknoten verbundene Kanten werden ermittelt und zwischengespeichert, bereits besuchte Kanten von Betrachtung ausschliessen??? -> Edge[] connectedEdges = actualN.getConnectedEdges ()- Way[]; ???
+		//connectedEdges = currentNode.getConnectedEdges (); // mit Quellknoten verbundene Kanten werden ermittelt und zwischengespeichert, bereits besuchte Kanten von Betrachtung ausschliessen??? -> Edge[] connectedEdges = actualN.getConnectedEdges ()- Way[]; ???
+		List<Edge> connectedEdges = new List<Edge>(currentNode.getConnectedEdges());
 		Edge currentEdge;
 
 		for(int i = connectedEdges.Count - 1; i >= 0; i--){
-			// lösche alle eingehenden Kanten aus Auswahl (flasche Richtung)
+			// lösche alle eingehenden Kanten aus Auswahl (falsche Richtung & kann nicht Rückwärtskante werden)
+			//if (connectedEdges[i].getEnd().Equals(currentNode.getName()) && connectedEdges[i].getCapacity() > connectedEdges[i].getFlow()){
 			if (connectedEdges[i].getEnd().Equals(currentNode.getName())){
+				Debug.LogWarning("Removed backwards Edge: " + connectedEdges[i].getEdgeName());
 				connectedEdges.RemoveAt(i);
 			}
 			// lösche alle besuchten Kanten aus Auswahl
 			else if (connectedEdges[i].getVisited()){
+				Debug.LogWarning("Removed visited Edge: " + connectedEdges[i].getEdgeName());
 				connectedEdges.RemoveAt(i);
 			}
-			// lösche alle vollen Kanten aus Auswahl
+			// lösche alle vollen Kanten aus Auswahl (nur Vorwärtskanten)
+			//else if (connectedEdges[i].getStart().Equals(currentNode.getName()) && connectedEdges[i].getFlow() >= connectedEdges[i].getCapacity()){
 			else if (connectedEdges[i].getFlow() >= connectedEdges[i].getCapacity()){
+				Debug.LogWarning("Removed full forward Edge: " + connectedEdges[i].getEdgeName());
 				connectedEdges.RemoveAt(i);
 			}
 		}
+
+		Debug.Log("connected Edges: " + connectedEdges.Count);
 
 		// wenn noch nicht Senke/ Sackgasse gefunden
 		if (connectedEdges.Count > 0){
 			currentEdge = connectedEdges[0];
 
-			Debug.LogError(currentNode.getName() + ": " + currentEdge.getEdgeName());
+			// Rückwärtskante
+			if (currentEdge.getEnd().Equals(currentNode.getName()) && currentEdge.getCapacity() <= currentEdge.getFlow()){
+				Waybackward.Add (currentEdge);// ausgewählte Kante wird dem Wegearray hinzugefügt und sich gemerkt, um später den Weg von Queelle zu Senke rekonstruieren zu können
+				
+				string tmp = currentEdge.getStart();
+				currentEdge.setStart(currentEdge.getEnd());
+				currentEdge.setEnd(tmp);
+				Debug.LogError("backwards Edge");
+			}
+			// Vorwärtskante
+			else if (currentEdge.getStart().Equals(currentNode.getName())){
+				Wayforward.Add (currentEdge);
+			}
 
-			Wayforward.Add (currentEdge);
 			currentEdge.setVisited(true);
 
 			leftCapacity = currentEdge.getCapacity() - currentEdge.getFlow ();
@@ -149,8 +134,12 @@ public class FordFulkerson : MonoBehaviour { //Erstellt von Tim und Sebastian
 			flowThroughEdge(Cc.GetNodeAsObject(currentEdge.getEnd()));
 		}
 		// Senke gefunden
-		else{
+		else if (currentNode.isSink){
 			terminate(true);
+		}
+		else{
+			vorarbeit();
+			return;
 		}
 	}
 
