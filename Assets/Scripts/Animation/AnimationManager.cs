@@ -45,6 +45,5 @@ public class AnimationManager : MonoBehaviour {
 
 	public void changeAnimationSpeed(float speed){
 		this.speed = speed;
-		Debug.Log(speed);
 	}
 }

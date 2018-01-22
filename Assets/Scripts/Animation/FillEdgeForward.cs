@@ -38,9 +38,7 @@ namespace Event{
 
 			currentPos = animated_line.GetPosition(0);
 
-			// färbe Animationskante ein
-			animated_line.material.EnableKeyword("_EMISSION");
-			animated_line.material.SetColor("_EmissionColor", new Color((float)flow/maxCapacity, 1.0f - (float)flow/maxCapacity, 0));
+			setMaterialColor(animated_line.material);
 
 			while (animating){
 				animate();
@@ -70,12 +68,24 @@ namespace Event{
 		}
 
 		void clean(){
-			// färbe Graphenkante ein
-			main_line.material.EnableKeyword("_EMISSION");
-			main_line.material.SetColor("_EmissionColor", new Color((float)flow/maxCapacity, 1.0f - (float)flow/maxCapacity, 0));
+			setMaterialColor(main_line.material);
 
 			animated_line.SetPosition(0, main_line.GetPosition(0) + Vector3.forward);
 			animated_line.SetPosition(1, main_line.GetPosition(1) + Vector3.forward);
+		}
+
+		void setMaterialColor(Material mat){
+			// ermögliche Einfärbung der Emission
+			mat.EnableKeyword("_EMISSION");
+
+			// bestimme farbe
+			Color fillColor = new Color(0,0,0);
+			float capacityPercentage = (float) flow / maxCapacity;
+			fillColor.r = (capacityPercentage) * capacityPercentage;
+			fillColor.g = (1.0f - capacityPercentage) * capacityPercentage;
+
+			// färbe ein
+			mat.SetColor("_EmissionColor", fillColor);
 		}
 	}
 }

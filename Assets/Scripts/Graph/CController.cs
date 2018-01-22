@@ -261,7 +261,7 @@ public class CController : MonoBehaviour {
 
 		// setze Werte für Kanten
 		constructEdge(edgeObject.GetComponent<LineRenderer>(), edgeObject.transform.GetChild(0).GetComponent<LineRenderer>(), 2, v1, v2);
-		edgeObject.name = edgeObject.name.Replace("(Clone)", "");
+		//edgeObject.name = edgeObject.name.Replace("(Clone)", "");
 		edgeObject.name = GetNode(v1) + " zu " + GetNode(v2);
 
 		e = new Edge(edgeObject, GetNode(v1), GetNode(v2), edgeObject.name, capacity, flow, false);
@@ -273,20 +273,20 @@ public class CController : MonoBehaviour {
 	{
 		mousePos = Input.mousePosition; // Vektor aus Auslesen der Mausposition 
 //!!!
-		mousePos.z = 11; // z Koordinate von Mauspos setzen
-		Vector3 objectPos = Camera.main.ScreenToWorldPoint(mousePos); // Übertragen auf Weltkamera 
-		Debug.Log(mousePos);
-		Quaternion spawnRotation = Quaternion.identity; // Standard rotation 
-		GameObject nodeObject = Instantiate(node, objectPos, spawnRotation); // Erstellen von Knoten(node aus Prefab, Mausposition, Standardrotation)
-		nodeObject.name = nodeObject.name.Replace("(Clone)", "");
-		nodeObject.name = "Knoten " + nodeNumber;
-		Node n = new Node(objectPos, "Knoten " + nodeNumber, false, false);
-		nodeNumber++;
-		vertexCount++;
-		nodes.Add(n);
-		Debug.Log("erstellt");
-		rowManager.InstantiateObject();
-	}
+        mousePos.z = 11; // z Koordinate von Mauspos setzen
+        Vector3 objectPos = Camera.main.ScreenToWorldPoint(mousePos); // Übertragen auf Weltkamera
+		objectPos.z = -1;
+        Quaternion spawnRotation = Quaternion.identity; // Standard rotation 
+        GameObject nodeObject = Instantiate(node, objectPos, spawnRotation); // Erstellen von Knoten(node aus Prefab, Mausposition, Standardrotation)
+        nodeObject.name = nodeObject.name.Replace("(Clone)", "");
+        nodeObject.name = "Knoten " + nodeNumber;
+        Node n = new Node(objectPos, "Knoten " + nodeNumber, false, false);
+        nodeNumber++;
+        vertexCount++;
+        nodes.Add(n);
+        Debug.Log("erstellt");
+        rowManager.InstantiateObject();
+    }
 
 	public void CreateEdge()
 	{
