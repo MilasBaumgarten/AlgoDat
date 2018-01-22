@@ -333,6 +333,9 @@ public class CController : MonoBehaviour {
 	}
 
 	private void constructEdge(LineRenderer edge, LineRenderer animationEdge, int capacity, Vector3 v1, Vector3 v2){
+		v1.z = 0;
+		v2.z = 0;
+
 		// setze Start und Endpunkt der Kante
 		edge.SetPosition(0, v1);
 		edge.SetPosition(1, v2);
@@ -341,7 +344,7 @@ public class CController : MonoBehaviour {
 		animationEdge.SetPosition(1, v2 + Vector3.forward);
 
 		// setze Pfeil
-		edge.transform.GetChild(1).transform.position = new Vector3(v1.x, v1.y, 0);
+		edge.transform.GetChild(1).transform.position = new Vector3(v1.x, v1.y, -0.5f);
 		// rotiere Pfeil in Richtung des Endpunktes
 		Vector2 arrowDirection = (v2 - edge.transform.GetChild(1).transform.position).normalized;
 		float angle = Mathf.Atan2(arrowDirection.y, arrowDirection.x) * -Mathf.Rad2Deg + 90;
@@ -350,7 +353,7 @@ public class CController : MonoBehaviour {
 		// verschiebe Pfeile in Richtung des Endpunktes
 		float offset = 0.162f;
 		edge.transform.GetChild(1).transform.position += new Vector3(arrowDirection.x * offset, arrowDirection.y * offset, 0);
-
+		edge.transform.GetChild(1).transform.Rotate(0, 180, 0);
 		
 		//maximale Kapazität einstellen
 		edge.widthMultiplier = Mathf.Min(capacity * widthMultiplier, maxWidth);

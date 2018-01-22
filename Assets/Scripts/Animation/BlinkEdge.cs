@@ -1,4 +1,4 @@
-﻿/*using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using Model;
 
@@ -9,18 +9,10 @@ namespace Event{
 		private float duration;
 		// wie oft die Edge blinkt
 		private int blinkAmount;
-		private float currentTime = 0f;
-
-		// ob Kante gerade animiert wird
-		private bool animating = true;
 
 		// dieses GameObject, muss wegen AnimationQueue übergeben werden
 		private GameObject thisEdge;
 
-		// verkürze Kommunikation mit LineRenderer Komponente über Variable
-		private LineRenderer main_line;
-
-		private Color originalColor;
 		private Color blinkColor;
 
 		// Konstruktor, um Parameter zu übergeben
@@ -34,35 +26,24 @@ namespace Event{
 
 		public override IEnumerator Run() {
 			// vereinfacht nachfolgenden Code
-			Material mat = thisEdge.GetComponent<LineRenderer>().material;
+			Color originalColor = thisEdge.GetComponent<LineRenderer>().material.color;
 
-			this.originalColor = edge.GetComponent<LineRenderer>().material.color;
+			float speed = AnimationManager.AM.speed;
 
-			// färbe Animationskante ein
-			animated_line.material.EnableKeyword("_EMISSION");
-			animated_line.material.SetColor("_EmissionColor", new Color((float)flow/maxCapacity, 1.0f - (float)flow/maxCapacity, 0));
-
-			while (animating){
-				animate();
-				yield return new WaitForEndOfFrame();
+			for (int i = 0; i < blinkAmount; i++){
+				yield return (duration / (speed * blinkAmount));
+				blink(originalColor);
+				yield return (duration / (speed * blinkAmount));
+				blink(blinkColor);
 			}
 		}
 
-		void animate(){
-			float speed = AnimationManager.AM.speed;
-			
+		void blink(Color color){
+			Material mat = thisEdge.GetComponent<LineRenderer>().material;
 
-			// erhöhe "Zeitmessung"
-			currentTime += Time.deltaTime;
-
-			// Animation ist beendet, sobald wirkliche Länge der Kante > gewollte Länge
-			if (Vector3.Distance(main_line.GetPosition(0), main_line.GetPosition(1)) <
-				Vector3.Distance(animated_line.GetPosition(0), animated_line.GetPosition(1))){
-				// beende Animation
-				animating = false;
-				currentTime = 0;
-			}
+			// färbe Animationskante ein
+			mat.EnableKeyword("_EMISSION");
+			mat.SetColor("_EmissionColor", color);
 		}
 	}
 }
-*/

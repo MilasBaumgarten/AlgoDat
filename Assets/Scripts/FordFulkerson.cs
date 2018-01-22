@@ -17,6 +17,8 @@ public class FordFulkerson : MonoBehaviour { //Erstellt von Tim und Sebastian
 	public static Node actualN;
 	CController Cc;
 
+	int killCount = 5;
+
 
 	void Start(){
 		GameObject sd = GameObject.FindWithTag("GraphController");
@@ -46,12 +48,9 @@ public class FordFulkerson : MonoBehaviour { //Erstellt von Tim und Sebastian
 				}
 			}
 
-
-		
-
-			for (int i = 0; i < Cc.getAllEdges().Count; i++) {  //Flow aller Edges auf 0 setzen; wird standartmaessig mit 0 belegt
-				List<Edge> allEdges =Cc.getAllEdges();
-			
+			List<Edge> allEdges =Cc.getAllEdges();
+			for (int i = 1; i < Cc.getAllEdges().Count; i++) {  //Flow aller Edges auf 0 setzen; wird standartmaessig mit 0 belegt
+				
 				allEdges [i].setVisited(false);
 			}
 		} 
@@ -63,17 +62,26 @@ public class FordFulkerson : MonoBehaviour { //Erstellt von Tim und Sebastian
 	}
 
 	public void fordFulkerson(bool walkThrough){ // eigentlicher Algorithmus, Walkthrough Variable gibt Auskunft darüber, welche Darstellungsart Nutzer angecklickt hat -> Schrittweise oder am Stück
+		if (killCount >= 0){
+			killCount--;
+		}
+		else{
+			kill();
+			return;
+		}
+
 		vorarbeit (); // oben vorbereitet und erläuterte Vorarbeit einmalig ausführen vor Start 
 		if (run) { // Test, ob Algorithmus noch ausgeführt werden soll bzw. darf
 			actualN = Cc.getSource (); // aktuell betrachteter Knoten ist die gewählte Quelle
 			connectedEdges = actualN.getConnectedEdges (); // mit Quellknoten verbundene Kanten werden ermittelt und zwischengespeichert
 			Debug.Log("Algorithmus gestartet!");
 
-			for (int i = 1; i <= connectedEdges.Count; i++) { //iterieren über alle am Knoten anliegenden Kanten
+			for (int i = 1; i <= connectedEdges.Count - 1; i++) { //iterieren über alle am Knoten anliegenden Kanten
 				Debug.Log("i: " + i + " " + connectedEdges[i].getEdgeName());
 				if (!connectedEdges[i].getVisited() && !connectedEdges[i].getEnd().Equals(actualN.getName()) && connectedEdges [i].getFlow() < connectedEdges [i].getCapacity()) { // Check ob aktuell betrachtete Kante noch freie Kapazitäten für den Fluss hat, erste passende Kante wird gewählt
 					//Blink gewählter passender Edge hier noch implementieren !!! Eigene Methode ???
 					Edge actualEdge = connectedEdges [i]; // Auswahl erster passender zu betrachtender Edge
+					Debug.LogWarning(connectedEdges [i].getFlow());
 
 					minimalFlow = actualEdge.getCapacity (); // kleinster Fluss wird als Referenzwert mit der maximalen Kapazität der Quelle initialisiert, CapacityMax = Dicke des Lasers, statische Zahl aus tabelle wird dargestellt
 					if(actualN.getName().Equals(actualEdge.getStart())){
@@ -83,14 +91,14 @@ public class FordFulkerson : MonoBehaviour { //Erstellt von Tim und Sebastian
 						Debug.Log("Wayforward Länge: " + Wayforward.Count);
 					}
 
-					AnimationManager.AM.addAnimation(new FillEdgeForward(connectedEdges[i].getObject(), connectedEdges[i].getFlow(), connectedEdges[i].getCapacity()));
-
 					actualN = Cc.GetNodeAsObject(actualEdge.getEnd ());// zu betrachtender Knoten wird gewechselt auf den Knoten, der am Ende der Edge befindlich ist (Frage bei Rückläufigen Edges???)
 
-					if (actualN == Cc.getSink ()) { // Test ob neuer zu betrachtender Knoten die Senke ist
+					flowThroughEdge(actualN);
+
+					/*if (actualN == Cc.getSink ()) { // Test ob neuer zu betrachtender Knoten die Senke ist
 						terminate (walkThrough); // Wenn ja, terminiere den Algorithmus und starte neuen Durchlauf, da kompletter Weg von Quelle zu Senke gefunden wurde
 						break; // Abbruch übergeordneter for Schleife
-					}
+					}*/
 
 					break; // Abbruch übergeordneter for Schleife
 				}
@@ -100,8 +108,6 @@ public class FordFulkerson : MonoBehaviour { //Erstellt von Tim und Sebastian
 				}
 				Debug.Log("Ich bin hier!");
 			}
-
-			flowThroughEdge(actualN);
 		}
 	}
 
@@ -124,7 +130,7 @@ public class FordFulkerson : MonoBehaviour { //Erstellt von Tim und Sebastian
 			}
 		}
 
-		// webb noch nicht Senke/ Sackgasse gefunden
+		// wenn noch nicht Senke/ Sackgasse gefunden
 		if (connectedEdges.Count > 0){
 			currentEdge = connectedEdges[0];
 
@@ -139,14 +145,12 @@ public class FordFulkerson : MonoBehaviour { //Erstellt von Tim und Sebastian
 				minimalFlow = leftCapacity; //Wenn ja, wird dieser durch den aktuell verbleibenden Fluss auf der Edge ersetzt
 			}
 
-			AnimationManager.AM.addAnimation(new FillEdgeForward(currentEdge.getObject(), currentEdge.getFlow(), currentEdge.getCapacity()));
-
 			// durchlaufe nächste Kante
 			flowThroughEdge(Cc.GetNodeAsObject(currentEdge.getEnd()));
 		}
 		// Senke gefunden
 		else{
-			kill();
+			terminate(true);
 		}
 	}
 
@@ -160,17 +164,19 @@ else if(actualN.getName().Equals(actualEdge.getEnd()) &&actualEdge.getFlow() != 
 	private void terminate(bool walkThrough){ //Terminieren des Algorithmus nach einem Erfolgreichen Durchlauf (Schritt), Walkthrough gibt abspielart an
 		MaxFlow += minimalFlow; // Inkrimentierung des Maximalen Flusses, um den, im aktuellen Durchgang, kleinsten benutzten Fluss
 		Debug.Log("Wayforward Länge: " + Wayforward.Count);
-		for (int i = 1; i < Wayforward.Count; i++) {//Iteration über alle im Weg zwischen Quelle und Senke befindlichen Kanten des aktuellen Durchlaufes
-				Wayforward [i].setFlow ((Wayforward [i].getCapacity () - Wayforward [i].getFlow ()) - minimalFlow); // Verringerung verbleibender Kapazität der Kanten, um deren aktuellen Füllstand
+		for (int i = 0; i < Wayforward.Count; i++) {//Iteration über alle im Weg zwischen Quelle und Senke befindlichen Kanten des aktuellen Durchlaufes
+				Wayforward [i].setFlow(Wayforward [i].getFlow() + minimalFlow);
+				AnimationManager.AM.addAnimation(new FillEdgeForward(Wayforward [i].getObject(), Wayforward [i].getFlow(), Wayforward [i].getCapacity()));
 		}
-		for (int i = 1; i < Waybackward.Count; i++){
+		for (int i = 0; i < Waybackward.Count; i++){
 				Waybackward [i].setFlow ((Waybackward [i].getCapacity () - Waybackward [i].getFlow ()) + minimalFlow);// Erhöhung verbleibender Kapazität der Kanten, um deren aktuellen rückläufigen Durchfluss
 		}	
+
+		Debug.Log("terminiert ");
 
 		if(walkThrough){ //Test ob kompletter Durchlauf angewählt wurde
 			fordFulkerson (true);//rekursiver Neuaufruf des FFA
 		}
-		Debug.Log("terminiert ");
 	}
 
 	private void kill(){ //Beendungsmethode
