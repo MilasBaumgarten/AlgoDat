@@ -247,15 +247,20 @@ public class CController : MonoBehaviour {
 		GameObject nodeObject = Instantiate(node, objectPos, spawnRotation); // Erstellen von Knoten(node aus Prefab, Mausposition, Standardrotation)
 
 		nodeObject.name = nodeObject.name.Replace("(Clone)", ""); // Clone im Namen entfernen
-		nodeObject.name = "v" + nodeNumber; // Knoten einen einzigartigen Namen zuweisen 
+		nodeObject.name = "Knoten " + nodeNumber; // Knoten einen einzigartigen Namen zuweisen 
 
-		n = new Node(objectPos, "v" + nodeNumber, source, sink); // Objekt mit Parametern erstellen
-		nodeNumber++;
+		n = new Node(objectPos, "Knoten " + nodeNumber, source, sink); // Objekt mit Parametern erstellen
+		
 		nodes.Add(n); //Objekt in Liste hinzufügen
-	}
+        //Tabelleneintrag erzeugen
+        rowManager.InstantiateVertex();
+        nodeNumber++;
+    }
 
 	public void createStandardEdge(Vector3 v1, Vector3 v2, int capacity, int flow)
 	{
+        this.v1 = v1;
+        this.v2 = v2;
 		// Spawne Kante
 		GameObject edgeObject = Instantiate(edge, new Vector3(v1.x, v1.y, 0), new Quaternion()); 
 
@@ -265,9 +270,12 @@ public class CController : MonoBehaviour {
 		edgeObject.name = GetNode(v1) + " zu " + GetNode(v2);
 
 		e = new Edge(edgeObject, GetNode(v1), GetNode(v2), edgeObject.name, capacity, flow, false);
+        
 		edges.Add(e);
 		AddCEdges(e);
-	}
+
+        rowManager.InstantiateEdge();
+    }
 
 	public void CreateNode()
 	{
@@ -308,7 +316,7 @@ public class CController : MonoBehaviour {
 			edgeObject.name = edgeObject.name.Replace("(Clone)", "");
 			edgeObject.name = GetNode(v1) + " zu " + GetNode(v2);
 
-			e = new Edge(edgeObject, GetNode(v1), GetNode(v2), edgeObject.name, 1, 0, false);
+			e = new Edge(edgeObject, GetNode(v1), GetNode(v2), edgeObject.name, 0, 0, false);
 			edges.Add(e);
 			AddCEdges(e);
 		

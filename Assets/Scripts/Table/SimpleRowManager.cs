@@ -1,12 +1,16 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
+using Model;
 
 public class SimpleRowManager : MonoBehaviour {
 
     //Prefab, welches instanziert werden soll
     public GameObject vertexPrefab;
     public Text vertexName;
+    public Toggle vertexSourceToggle;
+    public Toggle vertexSinkToggle;
 
     public GameObject edgePrefab;
     public Text edgeName;
@@ -21,6 +25,9 @@ public class SimpleRowManager : MonoBehaviour {
 
     private VertexEdgeNameGen nameGen;
     private CController ccont;
+    private List<Node> nodes;
+    private List<Edge> edges;
+    int currentEdgeIndex;
 
     //Container, in welchem das Prefab instanziert werden soll
     public GameObject vertexParent;
@@ -33,10 +40,16 @@ public class SimpleRowManager : MonoBehaviour {
 
         edgeStartList = new ArrayList();
         edgeEndList = new ArrayList();
+
+        currentEdgeIndex = 0;
     }
 
     public void InstantiateVertex()
     {
+        //Node-Liste aktualisieren
+        nodes = ccont.GetAllNodes();
+        
+
         isEdge = false;
         if(isEdge)
             edgeName.text = nameGen.GenerateEdgeName();
@@ -50,6 +63,9 @@ public class SimpleRowManager : MonoBehaviour {
 
     public void InstantiateEdge()
     {
+        //Edge-Liste aktualisieren
+        edges = ccont.GetAllEdges();
+
         edgeStart.text = ccont.GetV1();
         edgeEnd.text = ccont.GetV2();
 
@@ -58,6 +74,8 @@ public class SimpleRowManager : MonoBehaviour {
 
         edgeStartList.Add(ccont.GetV1());
         edgeEndList.Add(ccont.GetV2());
+
+        edgeCapacity.text = edges[currentEdgeIndex].getCapacity().ToString();
 
         isEdge = true;
         if (isEdge)
@@ -71,6 +89,9 @@ public class SimpleRowManager : MonoBehaviour {
 
         //Instanzierung des Prefabs
         GameObject edgeInTable = Instantiate(edgePrefab, edgeParent.transform);
+        currentEdgeIndex = edgeInTable.transform.GetSiblingIndex();
+        Debug.Log("Index: " + currentEdgeIndex);
+
         edgeInTable.name = edgeInTable.name.Replace("(Clone)", "");
         edgeInTable.name = ccont.GetV1() + " zu " + ccont.GetV2();
         
