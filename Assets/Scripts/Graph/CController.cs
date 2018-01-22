@@ -18,8 +18,11 @@ public class CController : MonoBehaviour {
 	[SerializeField]
 	private float maxWidth = 2;
 	private float widthMultiplier = 1;
+    public int edgeCounter = 0;
+    TextMesh edgeName = new TextMesh();
+    Transform edgePos;
 
-	[Header("Knoten Variablen")]
+    [Header("Knoten Variablen")]
 	public GameObject node; // Gameobjekt für Knoten
 	public int nodeNumber = 1;
 	public float timeWindow = 0.25f; // Zeitinterval für doppelklicks
@@ -266,15 +269,33 @@ public class CController : MonoBehaviour {
 
 		// setze Werte für Kanten
 		constructEdge(edgeObject.GetComponent<LineRenderer>(), edgeObject.transform.GetChild(0).GetComponent<LineRenderer>(), 2, v1, v2);
-		//edgeObject.name = edgeObject.name.Replace("(Clone)", "");
-		edgeObject.name = GetNode(v1) + " zu " + GetNode(v2);
+        //edgeObject.name = edgeObject.name.Replace("(Clone)", "");
+        Debug.Log("1."+ edgeCounter);
+        edgeObject.name = GetNode(v1) + " zu " + GetNode(v2);
+        GameObject[] edgeHolder = GameObject.FindGameObjectsWithTag("Edge");
+        
+        
+        edgeName = edgeHolder[edgeCounter].GetComponent<TextMesh>();
+        edgePos = edgeHolder[edgeCounter].GetComponent<RectTransform>();
+        edgeCounter++;
 
-		e = new Edge(edgeObject, GetNode(v1), GetNode(v2), edgeObject.name, capacity, flow, false);
+        Debug.Log(edgeCounter);
+        e = new Edge(edgeObject, GetNode(v1), GetNode(v2), edgeObject.name, capacity, flow, false);
         
 		edges.Add(e);
 		AddCEdges(e);
+        edgeName.text = e.getFlow()+ " / " + e.getCapacity();
+        edgePos.position =  Vector3.Lerp(v1, v2, 0.5f);
+
+        Quaternion aimRotation = Quaternion.LookRotation(v2 - v1);
+        aimRotation.x = 0;
+        aimRotation.y = 0;
+        
+
+        edgePos.rotation = aimRotation;
 
         rowManager.InstantiateEdge();
+       
     }
 
 	public void CreateNode()

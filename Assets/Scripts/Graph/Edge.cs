@@ -16,11 +16,11 @@ namespace Model
 		private string edgeName;
 		private int capacity;
 		private int flow;
-		private Boolean visited;
+		private bool visited;
 		private GameObject edgeObject;
 
 
-		public Edge(GameObject edgeObject, string startNode, string endNode, string edgeName, int capacity, int flow, Boolean visited)
+		public Edge(GameObject edgeObject, string startNode, string endNode, string edgeName, int capacity, int flow, bool visited)
 		{
 			this.startNode = startNode;
 			this.endNode = endNode;

@@ -11,6 +11,7 @@ TagManager:
   - AddVertex
   - VertexContent
   - GraphController
+  - Edge
   layers:
   - Default
   - TransparentFX
