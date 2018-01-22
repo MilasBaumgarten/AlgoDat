@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4629156378212564}
   m_Layer: 0
-  m_Name: Node
+  m_Name: vertex
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 135710504094576248}
   m_Layer: 0
   m_Name: Vertex
-  m_TagString: Untagged
+  m_TagString: Node
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

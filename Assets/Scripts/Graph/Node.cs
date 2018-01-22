@@ -22,10 +22,20 @@ namespace Model
             this.isSink = isSink;
 		}
 
+        public void setSource(bool isSource)
+        {
+            this.isSource = isSource;
+        }
+
             public bool getSource()
 		{
 			return isSource;
 		}
+
+        public void SetSink(bool isSink)
+        {
+            this.isSink = isSink;
+        }
 
 		public bool getSink()
 		{
@@ -36,7 +46,7 @@ namespace Model
 			return nodeName;
 		}
 
-		public List<Edge> getconnectedEdges(){
+		public List<Edge> getConnectedEdges(){
 			return cEdges;
 		}
 	}

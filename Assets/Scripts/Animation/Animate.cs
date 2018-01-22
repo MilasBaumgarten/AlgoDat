@@ -12,7 +12,8 @@ public class Animate : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.Space)){
 			if (edge != null){
 				flow ++;
-				AnimationManager.AM.addAnimation(new FillEdgeForward(edge, flow, 10));
+				//AnimationManager.AM.addAnimation(new FillEdgeForward(edge, flow, 10));
+				AnimationManager.AM.addAnimation(new BlinkEdge(edge, Color.yellow, 5, 5));
 			}
 		}
 

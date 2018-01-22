@@ -11,38 +11,29 @@ namespace Model
 		public Vector3 vectorA;
 		public Vector3 vectorB;
 
-		public string startNode;
-        public string endNode;
-        public string edgeName;
-		public int capacity;
-		public int flow;
-		public Boolean visited;
+		private string startNode;
+		private string endNode;
+		private string edgeName;
+		private int capacity;
+		private int flow;
+		private Boolean visited;
+		private GameObject edgeObject;
 
 
-		/*public Edge (Vector3 vectorA, Vector3 vectorB, string edgeName, double capacity, double flow, Boolean visited)
+		public Edge(GameObject edgeObject, string startNode, string endNode, string edgeName, int capacity, int flow, Boolean visited)
 		{
-			this.vectorA = vectorA;
-			this.vectorB = vectorB;
-            this.edgeName = edgeName;
+			this.startNode = startNode;
+			this.endNode = endNode;
+			this.edgeName = edgeName;
 			this.capacity = capacity;
 			this.flow = flow;
 			this.visited = visited;
-		}*/
+			this.edgeObject = edgeObject;
+		}
 
-		public Edge(string startNode, string endNode, string edgeName, int capacity, int flow, Boolean visited)
-        {
-            this.startNode = startNode;
-            this.endNode = endNode;
-            this.edgeName = edgeName;
-            this.capacity = capacity;
-            this.flow = flow;
-            this.visited = visited;
-        }
-
-//		public string GetName()
-//		{
-//			return a.Label + "_" + b.Label;
-//		}
+		public Edge(){
+			//null
+		}
 
 		public string getStart()
 		{
@@ -72,6 +63,10 @@ namespace Model
 			return edgeName;
 		}
 
+		public GameObject getObject(){
+			return edgeObject;
+		}
+
 
 		public void setFlow(int wert)
 		{
@@ -86,6 +81,16 @@ namespace Model
 		public void setVisited(bool visited)
 		{
 			this.visited = visited;
+		}
+
+		public void setStart(string start)
+		{
+			this.startNode = start;
+		}
+
+		public void setEnd(string end)
+		{
+			this.endNode = end;
 		}
 	}
 }

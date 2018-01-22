@@ -7,7 +7,6 @@ public class AnimationManager : MonoBehaviour {
 
 	public float delay = 0.5f;
 	public float speed = 2;
-	private bool speedChanged = true;
 
 	private Queue<IAction> animationQueue = new Queue<IAction>();
      
