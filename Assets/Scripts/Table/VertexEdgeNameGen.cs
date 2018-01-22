@@ -59,6 +59,7 @@ public class VertexEdgeNameGen : MonoBehaviour {
 
     public string GenerateVertexName()
     {
+        vertexNum = ccont.nodeNumber;
         //Zusammensetzen des Strings
         vertexName = vertexChar + vertexNum.ToString();
         //Testausgabe in der Konsole
