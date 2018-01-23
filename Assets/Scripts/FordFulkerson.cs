@@ -38,7 +38,7 @@ public class FordFulkerson : MonoBehaviour { //Erstellt von Tim und Sebastian
 				
 				allEdges [i].setVisited(false);
 			}
-		} 
+		}
 		else {
 			Debug.Log("Quelle und Senke sind nicht bestimmt!");
 			//Fehlermeldung im Dialogfenster ausgeben, dass Quelle und Senke nicht gewählt sind -> noch implementieren !!!

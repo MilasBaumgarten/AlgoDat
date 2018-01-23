@@ -62,13 +62,13 @@ public class CController : MonoBehaviour {
         }
         edgezahl = 0;
 
-        foreach (Edge e in edges){
+        /*foreach (Edge e in edges){
             edgeHolder = GameObject.FindGameObjectsWithTag("EdgeText");
             edgeName = edgeHolder[edgezahl].GetComponent<TextMesh>();
             edgeName.text = e.getFlow() + " / " + e.getCapacity();
             edgezahl++;
             Debug.Log("Flow: " + e.getFlow());
-        }
+        }*/
     }
  
 
@@ -416,7 +416,7 @@ public class CController : MonoBehaviour {
         edgeName = edgeHolder[edgeCounter].GetComponent<TextMesh>();
         edgePos = edgeHolder[edgeCounter].GetComponent<RectTransform>();
         edgeCounter++;
-        edgeName.text = e.getFlow()+ " / " + e.getCapacity();
+        edgeName.text = "0 / " + e.getCapacity();
         edgePos.position =  Vector3.Lerp(v1, v2, 0.5f);
         Quaternion aimRotation = Quaternion.LookRotation(v2 - v1);
         aimRotation.x = 0;
@@ -484,7 +484,7 @@ public class CController : MonoBehaviour {
             edgeName = edgeHolder[edgeCounter].GetComponent<TextMesh>();
             edgePos = edgeHolder[edgeCounter].GetComponent<RectTransform>();
             edgeCounter++;
-            edgeName.text = e.getFlow() + " / " + e.getCapacity();
+            edgeName.text ="0 / " + e.getCapacity();
             edgePos.position = Vector3.Lerp(v1, v2, 0.5f);
             Quaternion aimRotation = Quaternion.LookRotation(v2 - v1);
             aimRotation.x = 0;

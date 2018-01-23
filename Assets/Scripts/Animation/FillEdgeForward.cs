@@ -30,6 +30,9 @@ namespace AnimationQueue{
 			// vereinfacht nachfolgenden Code
 			main_line = thisEdge.GetComponent<LineRenderer>();
 			animated_line = thisEdge.transform.GetChild(0).GetComponent<LineRenderer>();
+			TextMesh textComponent = thisEdge.transform.GetComponentInChildren<TextMesh>();
+
+			textComponent.text = flow + " / " + maxCapacity;
 
 			// bewege Animierungskant vor Graphenkante
 			animated_line.SetPosition(0, main_line.GetPosition(0) + Vector3.back);
