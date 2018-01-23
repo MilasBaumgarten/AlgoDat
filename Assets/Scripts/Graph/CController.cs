@@ -63,7 +63,7 @@ public class CController : MonoBehaviour {
         edgezahl = 0;
 
         foreach (Edge e in edges){
-            edgeHolder = GameObject.FindGameObjectsWithTag("Edge");
+            edgeHolder = GameObject.FindGameObjectsWithTag("EdgeText");
             edgeName = edgeHolder[edgezahl].GetComponent<TextMesh>();
             edgeName.text = e.getFlow() + " / " + e.getCapacity();
             edgezahl++;
@@ -412,7 +412,7 @@ public class CController : MonoBehaviour {
         AddCEdges(e);
 
         // TextMesh Änderungen
-        edgeHolder = GameObject.FindGameObjectsWithTag("Edge");
+        edgeHolder = GameObject.FindGameObjectsWithTag("EdgeText");
         edgeName = edgeHolder[edgeCounter].GetComponent<TextMesh>();
         edgePos = edgeHolder[edgeCounter].GetComponent<RectTransform>();
         edgeCounter++;
@@ -480,7 +480,7 @@ public class CController : MonoBehaviour {
 			AddCEdges(e);
 
             // TextMesh Änderungen
-            edgeHolder = GameObject.FindGameObjectsWithTag("Edge");
+            edgeHolder = GameObject.FindGameObjectsWithTag("EdgeText");
             edgeName = edgeHolder[edgeCounter].GetComponent<TextMesh>();
             edgePos = edgeHolder[edgeCounter].GetComponent<RectTransform>();
             edgeCounter++;
