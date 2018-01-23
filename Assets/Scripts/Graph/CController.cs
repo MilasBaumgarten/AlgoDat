@@ -18,7 +18,8 @@ public class CController : MonoBehaviour {
 	[SerializeField]
 	private float maxWidth = 2;
 	private float widthMultiplier = 1;
-    public int edgeCounter = 0;
+    private int edgeCounterStandard = 0;
+    private int edgeCounterCreate = 0;
     TextMesh edgeName = new TextMesh();
     Transform edgePos;
 
@@ -29,7 +30,10 @@ public class CController : MonoBehaviour {
 	public double timeBuffer = 0; // Zeit seit letzem Klick
 	Vector3 mousePos = new Vector3(0, 0, 0); // Raumvektor für Mausposition
 	public int vertexCount = 0; //Tatsächliche Anzahl der Knoten
-
+    public int nodeCounterStandard  = 0;
+    public int nodeCounterCreate = 0;
+    TextMesh nodeName = new TextMesh();
+    Transform nodePos;
 	public Edge e;
 	public Node n;
 
@@ -45,8 +49,8 @@ public class CController : MonoBehaviour {
 	void Update()
 	{
 		ClickTracker(); 
-		if (Input.GetMouseButtonDown (2)) {
-		//Debug.Log(ConnectedEdges(v1));
+		if (Input.GetKeyDown("l")) {
+            removeGraph();
 		}
 	}
 
@@ -129,62 +133,77 @@ public class CController : MonoBehaviour {
 
 		if (Input.GetMouseButtonDown(0)) // Wenn linke Maustaste gedrückt dann...
 		{
-			if ((Time.time - timeBuffer) > timeWindow)// Wenn Zeit seit letztem Klick größer als Zeitinterval für Doppelklicks ist dann...
-			{
-				Debug.Log("single click");
-				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); // Erzeugen von einem Strahl(Ray) an der Mausposition
-				RaycastHit hit; //Zum erfassen der Position 
+            if ((Time.time - timeBuffer) > timeWindow)// Wenn Zeit seit letztem Klick größer als Zeitinterval für Doppelklicks ist dann...
+            {
+                Debug.Log("single click");
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); // Erzeugen von einem Strahl(Ray) an der Mausposition
+                RaycastHit hit; //Zum erfassen der Position 
 
-				if (Physics.Raycast(ray, out hit)) // Wenn der Strahl was trifft dann...
-				{
-					if (hit.collider.tag == "Node")// Wenn der Tag übereinstimmt dann...
-					{
-						Debug.Log("This is a Node");
-						if (v1.Equals(new Vector3(0, 0, 0)))// Wenn Knotenposition 1 noch nicht gesetzt ist dann...
-						{
-							v1 = hit.collider.transform.position; // Knotenposition 1 wird auf Ortsvektor(transform) des colliders gesetzt
-							Debug.Log("v1 set");
-						}
-						else
-						{
-							if ((v2.Equals(new Vector3(0, 0, 0))))// Wenn Knotenposition 2 noch nicht gesetzt ist dann...
-							{
-								v2 = hit.collider.transform.position; // Knotenposition 2 wird auf Ortsvektor(transform) des colliders gesetzt
-								if (v1.Equals(v2)) // Wenn Knotenposition 1 und Knotenposition 2 gleich sind dann... 
-								{
-									Debug.Log("nicht 2mal den selben pls");
-									v2 = new Vector3(0, 0, 0); // Zurücksetzen von Knotenposition 2 auf Ursprung zum reset
-								}
-								else
-								{
-									Debug.Log("v2 set");
-								}
-							}
-						}
-					}
-					else
-					{
-						Debug.Log("This isn't a Node");
-					}
-				}
-			}
-			else
-			{
-				// Erzeugen von einem Strahl(Ray) an der Mausposition
-				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out hit)) // Wenn der Strahl was trifft dann...
+                {
+                    if (hit.collider.tag == "Node")// Wenn der Tag übereinstimmt dann...
+                    {
+                        Debug.Log("This is a Node");
+                        if (v1.Equals(new Vector3(0, 0, 0)))// Wenn Knotenposition 1 noch nicht gesetzt ist dann...
+                        {
+                            v1 = hit.collider.transform.position; // Knotenposition 1 wird auf Ortsvektor(transform) des colliders gesetzt
+                            Debug.Log("v1 set");
+                        }
+                        else
+                        {
+                            if ((v2.Equals(new Vector3(0, 0, 0))))// Wenn Knotenposition 2 noch nicht gesetzt ist dann...
+                            {
+                                v2 = hit.collider.transform.position; // Knotenposition 2 wird auf Ortsvektor(transform) des colliders gesetzt
+                                if (v1.Equals(v2)) // Wenn Knotenposition 1 und Knotenposition 2 gleich sind dann... 
+                                {
+                                    Debug.Log("nicht 2mal den selben pls");
+                                    v2 = new Vector3(0, 0, 0); // Zurücksetzen von Knotenposition 2 auf Ursprung zum reset
+                                }
+                                else
+                                {
+                                    Debug.Log("v2 set");
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("This isn't a Node");
+                    }
+                }
+            }
+            else
+            {
+                // Erzeugen von einem Strahl(Ray) an der Mausposition
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit; //Zum erfassen der Position
+                if (Physics.Raycast(ray, out hit)) // Wenn der Strahl was trifft dann...
+                {
+                    if (hit.collider.tag == "Playfield")// Wenn der Tag übereinstimmt dann...
+                    {
+                        
+                            Debug.Log("double click");
+                            CreateNode();
+                        
 
-				if (!Physics.Raycast(ray)) // Wenn der Strahl was nichts trifft
-				{
-					Debug.Log("double click");
-					CreateNode();
-				}
-			}
-			timeBuffer = Time.time; //Aktuallisieren der Zeit
+                    }
+                }
+            }
+             timeBuffer = Time.time; //Aktuallisieren der Zeit
 		}
 	}
 
 	public void removeGraph()
 	{
+        vertexCount = 0; 
+        nodeCounterStandard = 0;
+        nodeCounterCreate = 0;
+
+        edgeCounterStandard = 0;
+        edgeCounterCreate = 0;
+        nodes.Clear();
+        edges.Clear();
+
 		nodes = new List<Node>();
 		edges = new List<Edge>();
 	}
@@ -253,11 +272,21 @@ public class CController : MonoBehaviour {
 		nodeObject.name = "Knoten " + nodeNumber; // Knoten einen einzigartigen Namen zuweisen 
 
 		n = new Node(objectPos, "Knoten " + nodeNumber, source, sink); // Objekt mit Parametern erstellen
-		
-		nodes.Add(n); //Objekt in Liste hinzufügen
+
+        //TextMesh Änderungen
+        GameObject[] nodeHolder = GameObject.FindGameObjectsWithTag("TextNode");
+        nodeName = nodeHolder[nodeCounterStandard].GetComponent<TextMesh>();
+        nodePos = nodeHolder[nodeCounterStandard].GetComponent<RectTransform>();
+        nodeCounterStandard++;
+        nodeName.text = "v" + nodeCounterStandard;
+        nodePos.position = position;
+
+
+        nodes.Add(n); //Objekt in Liste hinzufügen
         //Tabelleneintrag erzeugen
         rowManager.InstantiateVertex();
         nodeNumber++;
+        
     }
 
 	public void createStandardEdge(Vector3 v1, Vector3 v2, int capacity, int flow)
@@ -270,29 +299,25 @@ public class CController : MonoBehaviour {
 		// setze Werte für Kanten
 		constructEdge(edgeObject.GetComponent<LineRenderer>(), edgeObject.transform.GetChild(0).GetComponent<LineRenderer>(), 2, v1, v2);
         //edgeObject.name = edgeObject.name.Replace("(Clone)", "");
-        Debug.Log("1."+ edgeCounter);
-        edgeObject.name = GetNode(v1) + " zu " + GetNode(v2);
-        GameObject[] edgeHolder = GameObject.FindGameObjectsWithTag("Edge");
         
-        
-        edgeName = edgeHolder[edgeCounter].GetComponent<TextMesh>();
-        edgePos = edgeHolder[edgeCounter].GetComponent<RectTransform>();
-        edgeCounter++;
-
-        Debug.Log(edgeCounter);
         e = new Edge(edgeObject, GetNode(v1), GetNode(v2), edgeObject.name, capacity, flow, false);
-        
-		edges.Add(e);
-		AddCEdges(e);
+        edgeObject.name = GetNode(v1) + " zu " + GetNode(v2);
+        edges.Add(e);
+        AddCEdges(e);
+
+        // TextMesh Änderungen
+        GameObject[] edgeHolder = GameObject.FindGameObjectsWithTag("Edge");
+        edgeName = edgeHolder[edgeCounterStandard].GetComponent<TextMesh>();
+        edgePos = edgeHolder[edgeCounterStandard].GetComponent<RectTransform>();
+        edgeCounterStandard++;
         edgeName.text = e.getFlow()+ " / " + e.getCapacity();
         edgePos.position =  Vector3.Lerp(v1, v2, 0.5f);
-
         Quaternion aimRotation = Quaternion.LookRotation(v2 - v1);
         aimRotation.x = 0;
         aimRotation.y = 0;
-        
-
         edgePos.rotation = aimRotation;
+
+
 
         rowManager.InstantiateEdge();
        
@@ -312,6 +337,15 @@ public class CController : MonoBehaviour {
         Node n = new Node(objectPos, "Knoten " + nodeNumber, false, false);
         nodes.Add(n);
         Debug.Log(nodes.IndexOf(n));
+
+
+        //TextMesh Änderungen
+        GameObject[] nodeHolder = GameObject.FindGameObjectsWithTag("TextNode");
+        nodeName = nodeHolder[nodeCounterCreate].GetComponent<TextMesh>();
+        nodePos = nodeHolder[nodeCounterCreate].GetComponent<RectTransform>();
+        nodeCounterCreate++;
+        nodeName.text = "v" + nodeCounterCreate;
+        nodePos.position = objectPos;
 
         //Tabelleneintrag erstellen
         rowManager.InstantiateVertex();
@@ -340,7 +374,18 @@ public class CController : MonoBehaviour {
 			e = new Edge(edgeObject, GetNode(v1), GetNode(v2), edgeObject.name, 0, 0, false);
 			edges.Add(e);
 			AddCEdges(e);
-		
+
+            // TextMesh Änderungen
+            GameObject[] edgeHolder = GameObject.FindGameObjectsWithTag("Edge");
+            edgeName = edgeHolder[edgeCounterCreate].GetComponent<TextMesh>();
+            edgePos = edgeHolder[edgeCounterCreate].GetComponent<RectTransform>();
+            edgeCounterCreate++;
+            edgeName.text = e.getFlow() + " / " + e.getCapacity();
+            edgePos.position = Vector3.Lerp(v1, v2, 0.5f);
+            Quaternion aimRotation = Quaternion.LookRotation(v2 - v1);
+            aimRotation.x = 0;
+            aimRotation.y = 0;
+            edgePos.rotation = aimRotation;
 
             //Tabelleneintrag erstellen
             rowManager.InstantiateEdge();

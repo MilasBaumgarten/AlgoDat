@@ -12,6 +12,9 @@ TagManager:
   - VertexContent
   - GraphController
   - Edge
+  - Playfield
+  - TextNode
+  - killit
   layers:
   - Default
   - TransparentFX

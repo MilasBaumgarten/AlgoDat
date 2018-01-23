@@ -1629,7 +1629,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0000075233693, y: 0.00006282534}
+  m_AnchoredPosition: {x: -0.000022994209, y: 0.00006282534}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &559369852
@@ -2570,12 +2570,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   edge: {fileID: 1795331324801312, guid: 3342068c6a223394da2fb027f1043709, type: 2}
   maxWidth: 0.75
-  edgeCounter: 0
-  node: {fileID: 1240660225661440, guid: 7995fae4a482d8f4489b220ca605f22d, type: 2}
+  node: {fileID: 1738278807141896, guid: 77c0ad1ee06e8fe4eaecd0729fbd7d5a, type: 2}
   nodeNumber: 1
   timeWindow: 0.25
   timeBuffer: 0
   vertexCount: 0
+  nodeCounterStandard: 0
+  nodeCounterCreate: 0
 --- !u!4 &719973689
 Transform:
   m_ObjectHideFlags: 0
@@ -3416,7 +3417,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00010735028, y: 0.0000017846339}
+  m_AnchoredPosition: {x: -0.00010671358, y: 0.0000017846339}
   m_SizeDelta: {x: -42.8, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1035171228
@@ -3933,9 +3934,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1279882434}
   - component: {fileID: 1279882435}
+  - component: {fileID: 1279882436}
   m_Layer: 5
   m_Name: UI Empty Space
-  m_TagString: Untagged
+  m_TagString: Playfield
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3946,13 +3948,13 @@ RectTransform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1279882433}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 591635551}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -3977,6 +3979,18 @@ MonoBehaviour:
   m_FlexibleWidth: 6
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!65 &1279882436
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1279882433}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 940.7056, y: 1.000243, z: 920.8622}
+  m_Center: {x: -5.9334435, y: -0.00012149325, z: -3.1952596}
 --- !u!1 &1281657665
 GameObject:
   m_ObjectHideFlags: 0
@@ -5909,7 +5923,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1382851518}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.99999994
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
