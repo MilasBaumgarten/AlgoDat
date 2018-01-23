@@ -1,141 +1,222 @@
-﻿using System.Collections;
+﻿﻿using System.Collections;
+ 
 using System.Collections.Generic;
+ 
 using UnityEngine;
+ 
 using Model;
+ 
 
+ 
 public class CController : MonoBehaviour {
-
-	//Row-Manager zum erstellen der Tabellendaten
-	SimpleRowManager rowManager;
-
-
-	//Knoten reseten nachdem 2 ausgewählt wurden ohne Edge zu erstellen programmieren
-
-
-	[Header("Kanten Variablen")]
-	public GameObject edge; // Gameobjekt für Kante
-	// Kapazität der Kante
-	[SerializeField]
-	private float maxWidth = 2;
-	private float widthMultiplier = 1;
+  //Row-Manager zum erstellen der Tabellendaten
+  SimpleRowManager rowManager;
+ 
+  [Header("Kanten Variablen")]
+  public GameObject edge; // Gameobjekt für Kante
+ 
+  // Kapazität der Kante
+ 
+  [SerializeField]
+  private float maxWidth = 2;
+  private float widthMultiplier = 1;
     private int edgeCounter = 0;
     public TextMesh edgeName = new TextMesh();
     public Transform edgePos;
     public GameObject[] edgeHolder;
+ 
     private int edgezahl = 0;
-
+ 
    [Header("Knoten Variablen")]
-	public GameObject node; // Gameobjekt für Knoten
-	public int nodeNumber = 1;
-	public float timeWindow = 0.25f; // Zeitinterval für doppelklicks
-	public double timeBuffer = 0; // Zeit seit letzem Klick
-	Vector3 mousePos = new Vector3(0, 0, 0); // Raumvektor für Mausposition
-	public int vertexCount = 0; //Tatsächliche Anzahl der Knoten
+    public GameObject node; // Gameobjekt für Knoten
+    public int nodeNumber = 1;
+    public float timeWindow = 0.25f; // Zeitinterval für doppelklicks
+    public double timeBuffer = 0; // Zeit seit letzem Klick
+    public int vertexCount = 0; //Tatsächliche Anzahl der Knoten
     public int nodeCounter = 0;
     public TextMesh nodeName = new TextMesh();
     public Transform nodePos;
-	public Edge e;
-	public Node n;
 
-	public List<Node> nodes = new List<Node>();
-	public List<Edge> edges = new List<Edge>();
-	Vector3 v1 = new Vector3(0, 0, 0); // Platzhalter für Knotenposition 1
-	Vector3 v2 = new Vector3(0, 0, 0); // Platzhalter für Knotenposition 2
+    Vector3 mousePos = new Vector3(0, 0, 0); // Raumvektor für Mausposition
+ 
+    public Edge e;
+    public Node n;
+ 
+    public List<Node> nodes = new List<Node>();
+    public List<Edge> edges = new List<Edge>();
+    
+    Vector3 v1 = new Vector3(0, 0, 0); // Platzhalter für Knotenposition 1
+    Vector3 v2 = new Vector3(0, 0, 0); // Platzhalter für Knotenposition 2
+ 
+  public void Start(){
+    rowManager = GameObject.FindGameObjectWithTag("AddVertex").GetComponent<SimpleRowManager>();
+  }
+ 
 
-	public void Start(){
-		rowManager = GameObject.FindGameObjectWithTag("AddVertex").GetComponent<SimpleRowManager>();
-	}
-
-	void Update()
-	{
-		ClickTracker(); 
-		if (Input.GetKeyDown("l")) {
-            removeGraph();
-		}
+ 
+    void Update()
+    {
+        ClickTracker(); 
+        if (Input.GetKeyDown("l")) {
+                removeGraph();
+        }
         edgezahl = 0;
-        foreach (Edge e in edges)
-        {
+
+        foreach (Edge e in edges){
             edgeHolder = GameObject.FindGameObjectsWithTag("Edge");
             edgeName = edgeHolder[edgezahl].GetComponent<TextMesh>();
             edgeName.text = e.getFlow() + " / " + e.getCapacity();
             edgezahl++;
             Debug.Log("Flow: " + e.getFlow());
-            
         }
     }
+ 
 
-	public void ClickTracker()
-	{
-		if (Input.GetMouseButtonDown(1)) // Wenn rechte Maustaste gedrückt dann...
-		{
-			CreateEdge();
-		}
+ 
+  public void ClickTracker()
+ 
+  {
+ 
+    if (Input.GetMouseButtonDown(1)) // Wenn rechte Maustaste gedrückt dann...
+ 
+    {
+ 
+      CreateEdge();
+ 
+    }
+ 
 
-		if (Input.GetKeyDown("r"))
-		{
-			v1 = new Vector3(0, 0, 0); // Position zurücksetzen von Knotenposition 1
-			v2 = new Vector3(0, 0, 0); // Position zurücksetzen von Knotenposition 2
-			Debug.Log("Werte zurück gesetzt");
-		}
+ 
+    if (Input.GetKeyDown("r"))
+ 
+    {
+ 
+      v1 = new Vector3(0, 0, 0); // Position zurücksetzen von Knotenposition 1
+ 
+      v2 = new Vector3(0, 0, 0); // Position zurücksetzen von Knotenposition 2
+ 
+      Debug.Log("Werte zurück gesetzt");
+ 
+    }
+ 
 
-		if (Input.GetKeyDown("s"))
-		{
-			for (int i = 0; i < 3; i++)
-			{
-				Debug.Log(edges[i].getStart());
-				Debug.Log(edges[i].getEnd());
-			}
-		}
+ 
+    if (Input.GetKeyDown("s"))
+ 
+    {
+ 
+      for (int i = 0; i < 3; i++)
+ 
+      {
+ 
+        Debug.Log(edges[i].getStart());
+ 
+        Debug.Log(edges[i].getEnd());
+ 
+      }
+ 
+    }
+ 
 
-		if (Input.GetKeyDown("g"))
-		{
-			createStandardGraph ();
-		}
+ 
+    if (Input.GetKeyDown("g"))
+ 
+    {
+ 
+      createStandardGraph ();
+ 
+    }
+ 
 
-		if (Input.GetMouseButtonDown(0)) // Wenn linke Maustaste gedrückt dann...
-		{
-			if ((Time.time - timeBuffer) > timeWindow)// Wenn Zeit seit letztem Klick größer als Zeitinterval für Doppelklicks ist dann...
-			{
-				Debug.Log("single click");
-				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); // Erzeugen von einem Strahl(Ray) an der Mausposition
-				RaycastHit hit; //Zum erfassen der Position 
+ 
+    if (Input.GetMouseButtonDown(0)) // Wenn linke Maustaste gedrückt dann...
+ 
+    {
+ 
+      if ((Time.time - timeBuffer) > timeWindow)// Wenn Zeit seit letztem Klick größer als Zeitinterval für Doppelklicks ist dann...
+ 
+      {
+ 
+        Debug.Log("single click");
+ 
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); // Erzeugen von einem Strahl(Ray) an der Mausposition
+ 
+        RaycastHit hit; //Zum erfassen der Position 
+ 
 
-				if (Physics.Raycast(ray, out hit)) // Wenn der Strahl was trifft dann...
-				{
-					if (hit.collider.tag == "Node")// Wenn der Tag übereinstimmt dann...
-					{
-						Debug.Log("This is a Node");
-						if (v1.Equals(new Vector3(0, 0, 0)))// Wenn Knotenposition 1 noch nicht gesetzt ist dann...
-						{
-							v1 = hit.collider.transform.position; // Knotenposition 1 wird auf Ortsvektor(transform) des colliders gesetzt
-							Debug.Log("v1 set");
-						}
-						else
-						{
-							if ((v2.Equals(new Vector3(0, 0, 0))))// Wenn Knotenposition 2 noch nicht gesetzt ist dann...
-							{
-								v2 = hit.collider.transform.position; // Knotenposition 2 wird auf Ortsvektor(transform) des colliders gesetzt
-								if (v1.Equals(v2)) // Wenn Knotenposition 1 und Knotenposition 2 gleich sind dann... 
-								{
-									Debug.Log("nicht 2mal den selben pls");
-									v2 = new Vector3(0, 0, 0); // Zurücksetzen von Knotenposition 2 auf Ursprung zum reset
-								}
-								else
-								{
-									Debug.Log("v2 set");
-								}
-							}
-						}
-					}
-					else
-					{
-						Debug.Log("This isn't a Node");
-					}
-				}
-			}
-		}
+ 
+        if (Physics.Raycast(ray, out hit)) // Wenn der Strahl was trifft dann...
+ 
+        {
+ 
+          if (hit.collider.tag == "Node")// Wenn der Tag übereinstimmt dann...
+ 
+          {
+ 
+            Debug.Log("This is a Node");
+ 
+            if (v1.Equals(new Vector3(0, 0, 0)))// Wenn Knotenposition 1 noch nicht gesetzt ist dann...
+ 
+            {
+ 
+              v1 = hit.collider.transform.position; // Knotenposition 1 wird auf Ortsvektor(transform) des colliders gesetzt
+ 
+              Debug.Log("v1 set");
+ 
+            }
+ 
+            else
+ 
+            {
+ 
+              if ((v2.Equals(new Vector3(0, 0, 0))))// Wenn Knotenposition 2 noch nicht gesetzt ist dann...
+ 
+              {
+ 
+                v2 = hit.collider.transform.position; // Knotenposition 2 wird auf Ortsvektor(transform) des colliders gesetzt
+ 
+                if (v1.Equals(v2)) // Wenn Knotenposition 1 und Knotenposition 2 gleich sind dann... 
+ 
+                {
+ 
+                  Debug.Log("nicht 2mal den selben pls");
+ 
+                  v2 = new Vector3(0, 0, 0); // Zurücksetzen von Knotenposition 2 auf Ursprung zum reset
+ 
+                }
+ 
+                else
+ 
+                {
+ 
+                  Debug.Log("v2 set");
+ 
+                }
+ 
+              }
+ 
+            }
+ 
+          }
+ 
+          else
+ 
+          {
+ 
+            Debug.Log("This isn't a Node");
+ 
+          }
+ 
+        }
+ 
+      }
+ 
+    }
+ 
 
-		if (Input.GetMouseButtonDown(0)) // Wenn linke Maustaste gedrückt dann...
+ 
+    if (Input.GetMouseButtonDown(0)) // Wenn linke Maustaste gedrückt dann...
+ 
 		{
             if ((Time.time - timeBuffer) > timeWindow)// Wenn Zeit seit letztem Klick größer als Zeitinterval für Doppelklicks ist dann...
             {
@@ -193,23 +274,38 @@ public class CController : MonoBehaviour {
                     }
                 }
             }
-             timeBuffer = Time.time; //Aktuallisieren der Zeit
-		}
-	}
+                         timeBuffer = Time.time; //Aktuallisieren der Zeit
+ 
+    }
+ 
+  }
+ 
 
-	public void removeGraph()
-	{
+ 
+  public void removeGraph()
+ 
+  {
+ 
         vertexCount = 0; 
+ 
         nodeCounter = 0;
+ 
 
+ 
         edgeCounter = 0;
+ 
         nodes.Clear();
+ 
         edges.Clear();
+ 
 
-		nodes = new List<Node>();
-		edges = new List<Edge>();
-	}
-
+ 
+    nodes = new List<Node>();
+ 
+    edges = new List<Edge>();
+ 
+  }
+ 
 	public void removeNode(string name)
 	{
 		foreach (Node n in nodes) 
@@ -259,6 +355,10 @@ public class CController : MonoBehaviour {
 		createStandardEdge (vs5, vs4, 6, 0);
 		createStandardEdge (vs5, vs6, 10, 0);
 		createStandardEdge (vs4, vs6, 10, 0);
+
+        // CHEESE
+        createStandardEdge (vs3, vs2, 2, 0);
+
         v1 = new Vector3(0, 0, 0); // Position zurücksetzen von Knotenposition 1
         v2 = new Vector3(0, 0, 0); // Position zurücksetzen von Knotenposition 2
     }
@@ -296,11 +396,15 @@ public class CController : MonoBehaviour {
         this.v1 = v1;
         this.v2 = v2;
 		// Spawne Kante
-		GameObject edgeObject = Instantiate(edge, new Vector3(v1.x, v1.y, 0), new Quaternion()); 
+		GameObject edgeObject = Instantiate(edge, new Vector3(v1.x, v1.y, 0), new Quaternion());
 
 		// setze Werte für Kanten
 		constructEdge(edgeObject.GetComponent<LineRenderer>(), edgeObject.transform.GetChild(0).GetComponent<LineRenderer>(), 2, v1, v2);
-        //edgeObject.name = edgeObject.name.Replace("(Clone)", "");
+
+        //HACK
+        if (v1 == new Vector3(1, -2, 1) && v2 == new Vector3(1, 2, 1)){
+            edgeObject.GetComponent<LineRenderer>().SetPositions(new Vector3[]{new Vector3(v1.x, v1.y, 2), new Vector3(v2.x, v2.y, 2)});
+        }
         
         e = new Edge(edgeObject, GetNode(v1), GetNode(v2), edgeObject.name, capacity, flow, false);
         edgeObject.name = GetNode(v1) + " zu " + GetNode(v2);

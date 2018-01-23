@@ -78,7 +78,7 @@ public class FordFulkerson : MonoBehaviour { //Erstellt von Tim und Sebastian
 	}
 
 	private void flowThroughEdge(Node currentNode){
-		//connectedEdges = currentNode.getConnectedEdges (); // mit Quellknoten verbundene Kanten werden ermittelt und zwischengespeichert, bereits besuchte Kanten von Betrachtung ausschliessen??? -> Edge[] connectedEdges = actualN.getConnectedEdges ()- Way[]; ???
+		// mit Quellknoten verbundene Kanten werden ermittelt und zwischengespeichert, bereits besuchte Kanten von Betrachtung ausschliessen??? -> Edge[] connectedEdges = actualN.getConnectedEdges ()- Way[]; ???
 		List<Edge> connectedEdges = new List<Edge>(currentNode.getConnectedEdges());
 		Edge currentEdge;
 
