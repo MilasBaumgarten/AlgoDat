@@ -77,8 +77,8 @@ public class CController : MonoBehaviour {
 		}
 
 		if (Input.GetKeyDown("g"))
-		{
-			createStandardGraph ();
+		{   
+            createStandardGraph ();
 		}
 
 		if (Input.GetMouseButtonDown(0)) // Wenn linke Maustaste gedrückt dann...
@@ -211,7 +211,7 @@ public class CController : MonoBehaviour {
 
 	public void createStandardGraph()
 	{
-		removeGraph ();
+        removeGraph ();
 		Vector3 v1 = new Vector3(-1, 0, 1);
 		Vector3 v2 = new Vector3(1, 2, 1);
 		Vector3 v3 = new Vector3(1, -2, 1);
@@ -235,8 +235,6 @@ public class CController : MonoBehaviour {
 		createStandardEdge (v5, v4, 6, 0);
 		createStandardEdge (v5, v6, 10, 0);
 		createStandardEdge (v4, v6, 10, 0);
-
-
 	}
 
 	public void createStandardNode(Vector3 position, bool source,bool sink)
@@ -252,9 +250,11 @@ public class CController : MonoBehaviour {
 		n = new Node(objectPos, "Knoten " + nodeNumber, source, sink); // Objekt mit Parametern erstellen
 		
 		nodes.Add(n); //Objekt in Liste hinzufügen
+
         //Tabelleneintrag erzeugen
         rowManager.InstantiateVertex();
         nodeNumber++;
+        vertexCount++;
     }
 
 	public void createStandardEdge(Vector3 v1, Vector3 v2, int capacity, int flow)

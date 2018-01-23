@@ -3415,7 +3415,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 21.781603, y: 0.0000017846339}
+  m_AnchoredPosition: {x: 0.00008000224, y: 0.0000017846339}
   m_SizeDelta: {x: -42.8, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1035171228
@@ -3883,7 +3883,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 193948570}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.9374187
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5274,8 +5274,10 @@ MonoBehaviour:
     type: 2}
   vertexName: {fileID: 114681363266693312, guid: 34555350188a3164e8b9ab1b946de84c,
     type: 2}
-  vertexSourceToggle: {fileID: 0}
-  vertexSinkToggle: {fileID: 0}
+  vertexSourceToggle: {fileID: 1882335974562052, guid: 34555350188a3164e8b9ab1b946de84c,
+    type: 2}
+  vertexSinkToggle: {fileID: 1119920235956254, guid: 34555350188a3164e8b9ab1b946de84c,
+    type: 2}
   edgePrefab: {fileID: 1268071235241458, guid: d9d39d5a509c313419800fcbf638bb20, type: 2}
   edgeName: {fileID: 114266382850475002, guid: d9d39d5a509c313419800fcbf638bb20, type: 2}
   edgeStart: {fileID: 114651803371334474, guid: d9d39d5a509c313419800fcbf638bb20,

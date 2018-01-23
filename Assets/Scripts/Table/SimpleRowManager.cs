@@ -3,14 +3,15 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using Model;
+using UnityEngine.SceneManagement;
 
 public class SimpleRowManager : MonoBehaviour {
 
     //Prefab, welches instanziert werden soll
     public GameObject vertexPrefab;
     public Text vertexName;
-    public Toggle vertexSourceToggle;
-    public Toggle vertexSinkToggle;
+    public GameObject vertexSourceToggle;
+    public GameObject vertexSinkToggle;
 
     public GameObject edgePrefab;
     public Text edgeName;
@@ -27,7 +28,8 @@ public class SimpleRowManager : MonoBehaviour {
     private CController ccont;
     private List<Node> nodes;
     private List<Edge> edges;
-    int currentEdgeIndex;
+    private int currentEdgeIndex;
+    private int currentNodeIndex;
 
     //Container, in welchem das Prefab instanziert werden soll
     public GameObject vertexParent;
@@ -44,6 +46,8 @@ public class SimpleRowManager : MonoBehaviour {
         edgeEndList = new ArrayList();
 
         currentEdgeIndex = 0;
+        currentNodeIndex = 0;
+
         createStandardGraph = false;
     }
 
@@ -52,6 +56,7 @@ public class SimpleRowManager : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.G))
         {
             currentEdgeIndex = 0;
+            currentNodeIndex = 0;
             createStandardGraph = true;
         }
     }
@@ -60,7 +65,6 @@ public class SimpleRowManager : MonoBehaviour {
     {
         //Node-Liste aktualisieren
         nodes = ccont.GetAllNodes();
-        
 
         isEdge = false;
         if(isEdge)
@@ -71,6 +75,16 @@ public class SimpleRowManager : MonoBehaviour {
         GameObject nodeInTable = Instantiate(vertexPrefab, vertexParent.transform);
         nodeInTable.name = nodeInTable.name.Replace("(Clone)", "");
         nodeInTable.name = "Knoten " + (ccont.nodeNumber).ToString();
+    }
+
+    public void readSourceSink()
+    {
+        for (int i = 0; i < nodes.Count; i++)
+        {
+            GameObject nodeInTable = GameObject.FindGameObjectWithTag("VertexContent").transform.GetChild(i + 1).gameObject;
+            nodeInTable.transform.Find("SourceToggle").GetComponent<Toggle>().isOn = nodes[i].getSource();
+            nodeInTable.transform.Find("SinkToggle").GetComponent<Toggle>().isOn = nodes[i].getSink();
+        }
     }
 
     public void InstantiateEdge()
@@ -112,7 +126,7 @@ public class SimpleRowManager : MonoBehaviour {
 
         //Instanzierung des Prefabs
         GameObject edgeInTable = Instantiate(edgePrefab, edgeParent.transform);
-        currentEdgeIndex = edgeInTable.transform.GetSiblingIndex() - 1;
+        currentEdgeIndex = edgeInTable.transform.GetSiblingIndex();
         Debug.Log("Index: " + currentEdgeIndex);
 
         edgeInTable.name = edgeInTable.name.Replace("(Clone)", "");
