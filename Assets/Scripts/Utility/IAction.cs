@@ -1,8 +1,7 @@
 using System;
 using System.Collections;
 
-namespace Event
-{
+namespace AnimationQueue{
 	public interface IAction
 	{
 		IEnumerator Run();

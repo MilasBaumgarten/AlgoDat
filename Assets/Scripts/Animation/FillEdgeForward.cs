@@ -1,8 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
-using Model;
 
-namespace Event{
+namespace AnimationQueue{
 	public class FillEdgeForward : BasicAction {
 
 		// momentane Position des Kantenendes während der Animation
@@ -50,9 +49,7 @@ namespace Event{
 		void animate(){
 			float speed = AnimationManager.AM.speed;
 			// errechne Richtungsvektor (normalisiert) -> Änderung des Endpunktes pro Frame
-			Vector3 direction = (main_line.GetPosition(1) - main_line.GetPosition(0)).normalized;
-			// setze Tiefe (z) auf Animationsebene (0)
-			direction.z = 0;
+			Vector3 direction = (main_line.GetPosition(1) - animated_line.GetPosition(0)).normalized;
 
 			// berechne Zielpunkt der Bewegung für diesen Frame
 			currentPos += direction * speed * Time.deltaTime;

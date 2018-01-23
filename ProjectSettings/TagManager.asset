@@ -15,6 +15,7 @@ TagManager:
   - Playfield
   - TextNode
   - killit
+  - EdgeText
   layers:
   - Default
   - TransparentFX

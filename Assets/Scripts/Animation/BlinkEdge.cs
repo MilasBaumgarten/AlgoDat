@@ -1,8 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
-using Model;
 
-namespace Event{
+namespace AnimationQueue{
 	public class BlinkEdge : BasicAction {
 
 		// wie lange die Animation geht

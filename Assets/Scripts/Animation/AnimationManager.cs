@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Event;
+using AnimationQueue;
 
 public class AnimationManager : MonoBehaviour {
 

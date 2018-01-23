@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Event{
+namespace AnimationQueue{
 	public class AnimateVertex : BasicAction {
 
 		public override IEnumerator Run() {
