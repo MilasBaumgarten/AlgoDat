@@ -18,22 +18,22 @@ public class CController : MonoBehaviour {
 	[SerializeField]
 	private float maxWidth = 2;
 	private float widthMultiplier = 1;
-    private int edgeCounterStandard = 0;
-    private int edgeCounterCreate = 0;
-    TextMesh edgeName = new TextMesh();
-    Transform edgePos;
+    private int edgeCounter = 0;
+    public TextMesh edgeName = new TextMesh();
+    public Transform edgePos;
+    public GameObject[] edgeHolder;
+    private int edgezahl = 0;
 
-    [Header("Knoten Variablen")]
+   [Header("Knoten Variablen")]
 	public GameObject node; // Gameobjekt für Knoten
 	public int nodeNumber = 1;
 	public float timeWindow = 0.25f; // Zeitinterval für doppelklicks
 	public double timeBuffer = 0; // Zeit seit letzem Klick
 	Vector3 mousePos = new Vector3(0, 0, 0); // Raumvektor für Mausposition
 	public int vertexCount = 0; //Tatsächliche Anzahl der Knoten
-    public int nodeCounterStandard  = 0;
-    public int nodeCounterCreate = 0;
-    TextMesh nodeName = new TextMesh();
-    Transform nodePos;
+    public int nodeCounter = 0;
+    public TextMesh nodeName = new TextMesh();
+    public Transform nodePos;
 	public Edge e;
 	public Node n;
 
@@ -52,7 +52,17 @@ public class CController : MonoBehaviour {
 		if (Input.GetKeyDown("l")) {
             removeGraph();
 		}
-	}
+        edgezahl = 0;
+        foreach (Edge e in edges)
+        {
+            edgeHolder = GameObject.FindGameObjectsWithTag("Edge");
+            edgeName = edgeHolder[edgezahl].GetComponent<TextMesh>();
+            edgeName.text = e.getFlow() + " / " + e.getCapacity();
+            edgezahl++;
+            Debug.Log("Flow: " + e.getFlow());
+            
+        }
+    }
 
 	public void ClickTracker()
 	{
@@ -74,12 +84,6 @@ public class CController : MonoBehaviour {
 			{
 				Debug.Log(edges[i].getStart());
 				Debug.Log(edges[i].getEnd());
-				//Debug.Log(nodes[i].getconnectedEdges());
-				/*Debug.Log(GetCapacity(i));
-				Debug.Log(GetFlow(i));
-				Debug.Log(GetSource(i));
-				Debug.Log(GetSource(i));
-				Debug.Log(GetVisited(i));*/
 			}
 		}
 
@@ -196,11 +200,9 @@ public class CController : MonoBehaviour {
 	public void removeGraph()
 	{
         vertexCount = 0; 
-        nodeCounterStandard = 0;
-        nodeCounterCreate = 0;
+        nodeCounter = 0;
 
-        edgeCounterStandard = 0;
-        edgeCounterCreate = 0;
+        edgeCounter = 0;
         nodes.Clear();
         edges.Clear();
 
@@ -234,32 +236,32 @@ public class CController : MonoBehaviour {
 	public void createStandardGraph()
 	{
 		removeGraph ();
-		Vector3 v1 = new Vector3(-1, 0, 1);
-		Vector3 v2 = new Vector3(1, 2, 1);
-		Vector3 v3 = new Vector3(1, -2, 1);
-		Vector3 v4 = new Vector3(4, 2, 1);
-		Vector3 v5 = new Vector3(4, -2, 1);
-		Vector3 v6 = new Vector3(6, 0, 1);
+		Vector3 vs1 = new Vector3(-1, 0, 1);
+		Vector3 vs2 = new Vector3(1, 2, 1);
+		Vector3 vs3 = new Vector3(1, -2, 1);
+		Vector3 vs4 = new Vector3(4, 2, 1);
+		Vector3 vs5 = new Vector3(4, -2, 1);
+		Vector3 vs6 = new Vector3(6, 0, 1);
 		
-		createStandardNode (v1, true, false);
-		createStandardNode (v2, false, false);
-		createStandardNode (v3, false, false);
-		createStandardNode (v4, false, false);
-		createStandardNode (v5, false, false);
-		createStandardNode (v6, false, true);
+		createStandardNode (vs1, true, false);
+		createStandardNode (vs2, false, false);
+		createStandardNode (vs3, false, false);
+		createStandardNode (vs4, false, false);
+		createStandardNode (vs5, false, false);
+		createStandardNode (vs6, false, true);
 
-		createStandardEdge (v1, v2, 10, 0);
-		createStandardEdge (v1, v3, 10, 0);
-		createStandardEdge (v2, v3, 2, 0);
-		createStandardEdge (v2, v4, 4, 0);
-		createStandardEdge (v3, v5, 9, 0);
-		createStandardEdge (v2, v5, 8, 0);
-		createStandardEdge (v5, v4, 6, 0);
-		createStandardEdge (v5, v6, 10, 0);
-		createStandardEdge (v4, v6, 10, 0);
-
-
-	}
+		createStandardEdge (vs1, vs2, 10, 0);
+		createStandardEdge (vs1, vs3, 10, 0);
+		createStandardEdge (vs2, vs3, 2, 0);
+		createStandardEdge (vs2, vs4, 4, 0);
+		createStandardEdge (vs3, vs5, 9, 0);
+		createStandardEdge (vs2, vs5, 8, 0);
+		createStandardEdge (vs5, vs4, 6, 0);
+		createStandardEdge (vs5, vs6, 10, 0);
+		createStandardEdge (vs4, vs6, 10, 0);
+        v1 = new Vector3(0, 0, 0); // Position zurücksetzen von Knotenposition 1
+        v2 = new Vector3(0, 0, 0); // Position zurücksetzen von Knotenposition 2
+    }
 
 	public void createStandardNode(Vector3 position, bool source,bool sink)
 	{
@@ -275,10 +277,10 @@ public class CController : MonoBehaviour {
 
         //TextMesh Änderungen
         GameObject[] nodeHolder = GameObject.FindGameObjectsWithTag("TextNode");
-        nodeName = nodeHolder[nodeCounterStandard].GetComponent<TextMesh>();
-        nodePos = nodeHolder[nodeCounterStandard].GetComponent<RectTransform>();
-        nodeCounterStandard++;
-        nodeName.text = "v" + nodeCounterStandard;
+        nodeName = nodeHolder[nodeCounter].GetComponent<TextMesh>();
+        nodePos = nodeHolder[nodeCounter].GetComponent<RectTransform>();
+        nodeCounter++;
+        nodeName.text = "v" + nodeCounter;
         nodePos.position = position;
 
 
@@ -306,18 +308,16 @@ public class CController : MonoBehaviour {
         AddCEdges(e);
 
         // TextMesh Änderungen
-        GameObject[] edgeHolder = GameObject.FindGameObjectsWithTag("Edge");
-        edgeName = edgeHolder[edgeCounterStandard].GetComponent<TextMesh>();
-        edgePos = edgeHolder[edgeCounterStandard].GetComponent<RectTransform>();
-        edgeCounterStandard++;
+        edgeHolder = GameObject.FindGameObjectsWithTag("Edge");
+        edgeName = edgeHolder[edgeCounter].GetComponent<TextMesh>();
+        edgePos = edgeHolder[edgeCounter].GetComponent<RectTransform>();
+        edgeCounter++;
         edgeName.text = e.getFlow()+ " / " + e.getCapacity();
         edgePos.position =  Vector3.Lerp(v1, v2, 0.5f);
         Quaternion aimRotation = Quaternion.LookRotation(v2 - v1);
         aimRotation.x = 0;
         aimRotation.y = 0;
         edgePos.rotation = aimRotation;
-
-
 
         rowManager.InstantiateEdge();
        
@@ -341,10 +341,10 @@ public class CController : MonoBehaviour {
 
         //TextMesh Änderungen
         GameObject[] nodeHolder = GameObject.FindGameObjectsWithTag("TextNode");
-        nodeName = nodeHolder[nodeCounterCreate].GetComponent<TextMesh>();
-        nodePos = nodeHolder[nodeCounterCreate].GetComponent<RectTransform>();
-        nodeCounterCreate++;
-        nodeName.text = "v" + nodeCounterCreate;
+        nodeName = nodeHolder[nodeCounter].GetComponent<TextMesh>();
+        nodePos = nodeHolder[nodeCounter].GetComponent<RectTransform>();
+        nodeCounter++;
+        nodeName.text = "v" + nodeCounter;
         nodePos.position = objectPos;
 
         //Tabelleneintrag erstellen
@@ -376,10 +376,10 @@ public class CController : MonoBehaviour {
 			AddCEdges(e);
 
             // TextMesh Änderungen
-            GameObject[] edgeHolder = GameObject.FindGameObjectsWithTag("Edge");
-            edgeName = edgeHolder[edgeCounterCreate].GetComponent<TextMesh>();
-            edgePos = edgeHolder[edgeCounterCreate].GetComponent<RectTransform>();
-            edgeCounterCreate++;
+            edgeHolder = GameObject.FindGameObjectsWithTag("Edge");
+            edgeName = edgeHolder[edgeCounter].GetComponent<TextMesh>();
+            edgePos = edgeHolder[edgeCounter].GetComponent<RectTransform>();
+            edgeCounter++;
             edgeName.text = e.getFlow() + " / " + e.getCapacity();
             edgePos.position = Vector3.Lerp(v1, v2, 0.5f);
             Quaternion aimRotation = Quaternion.LookRotation(v2 - v1);
