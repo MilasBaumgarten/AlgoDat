@@ -20,6 +20,7 @@ public class SimpleDelete : MonoBehaviour {
 
     private List<Node> nodes;
     private List<Edge> edges;
+    private List<Edge> connectedEdges;
 
     void Start()
     {
@@ -30,6 +31,7 @@ public class SimpleDelete : MonoBehaviour {
     public void DeleteVertex()
     {
         nodes = ccont.GetAllNodes();
+        edges = ccont.getAllEdges();
         //Auslesen der im Knoten anliegenden Kanten
         edgeStartList = rowManager.GetEdgeStartList();
         edgeEndList = rowManager.GetEdgeEndList();
@@ -37,10 +39,41 @@ public class SimpleDelete : MonoBehaviour {
         Debug.Log(edgeStartList.Count);
         int currentIndex = gameObject.transform.parent.GetSiblingIndex() - 1;
         Debug.Log("Tabel-Index: " + currentIndex);
+
+        //Connected Edges Löschen
+        connectedEdges = nodes[currentIndex].getConnectedEdges();
+        if (connectedEdges != null)
+        {
+            foreach (Edge e in connectedEdges)
+            {
+                Node tempStart = ccont.GetNodeAsObject(e.getStart());
+                Node tempEnd = ccont.GetNodeAsObject(e.getEnd());
+
+                if(tempStart.getName() == nodes[currentIndex].getName())
+                {
+                    tempEnd.getConnectedEdges().Remove(e);
+                }
+                else if(tempEnd.getName() == nodes[currentIndex].getName())
+                {
+                    tempStart.getConnectedEdges().Remove(e);
+                }
+
+                Destroy(GameObject.Find(e.getEdgeName()));
+                Destroy(GameObject.FindGameObjectWithTag("EdgeContent").transform.Find(e.getEdgeName()).gameObject);
+                edges.Remove(e);
+            }
+        }
+        
         nodes.RemoveAt(currentIndex);
         Debug.Log("Nodes left: ");
         foreach(Node n in nodes){
-            Debug.Log(n.nodeName);
+            connectedEdges = n.getConnectedEdges();
+            Debug.Log(n.nodeName + "Connected Edges: ");
+            foreach(Edge e in connectedEdges)
+            {
+                Debug.Log(e.getEdgeName());
+            }
+
         }
         ccont.SetAllNodes(nodes);
         /*

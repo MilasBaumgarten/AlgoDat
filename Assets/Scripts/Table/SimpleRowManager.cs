@@ -33,6 +33,8 @@ public class SimpleRowManager : MonoBehaviour {
     public GameObject vertexParent;
     public GameObject edgeParent;
 
+    private bool createStandardGraph;
+
     void Start()
     {
         nameGen = GameObject.Find("EventSystem").GetComponent<VertexEdgeNameGen>();
@@ -42,6 +44,16 @@ public class SimpleRowManager : MonoBehaviour {
         edgeEndList = new ArrayList();
 
         currentEdgeIndex = 0;
+        createStandardGraph = false;
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            currentEdgeIndex = 0;
+            createStandardGraph = true;
+        }
     }
 
     public void InstantiateVertex()
@@ -63,6 +75,17 @@ public class SimpleRowManager : MonoBehaviour {
 
     public void InstantiateEdge()
     {
+        if (createStandardGraph)
+        {
+            currentEdgeIndex = 0;
+            createStandardGraph = false;
+        }
+
+        if(GameObject.FindGameObjectWithTag("EdgeContent").transform.childCount == 1)
+        {
+            currentEdgeIndex = 0;
+        }
+
         //Edge-Liste aktualisieren
         edges = ccont.GetAllEdges();
 
@@ -74,7 +97,7 @@ public class SimpleRowManager : MonoBehaviour {
 
         edgeStartList.Add(ccont.GetV1());
         edgeEndList.Add(ccont.GetV2());
-
+        Debug.Log("CurrentEdgeIndex: " + currentEdgeIndex);
         edgeCapacity.text = edges[currentEdgeIndex].getCapacity().ToString();
 
         isEdge = true;
@@ -89,7 +112,7 @@ public class SimpleRowManager : MonoBehaviour {
 
         //Instanzierung des Prefabs
         GameObject edgeInTable = Instantiate(edgePrefab, edgeParent.transform);
-        currentEdgeIndex = edgeInTable.transform.GetSiblingIndex();
+        currentEdgeIndex = edgeInTable.transform.GetSiblingIndex() - 1;
         Debug.Log("Index: " + currentEdgeIndex);
 
         edgeInTable.name = edgeInTable.name.Replace("(Clone)", "");
