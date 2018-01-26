@@ -135,10 +135,7 @@ public class CController : MonoBehaviour {
  
       if ((Time.time - timeBuffer) > timeWindow)// Wenn Zeit seit letztem Klick größer als Zeitinterval für Doppelklicks ist dann...
  
-      {
- 
-        Debug.Log("single click");
- 
+      { 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); // Erzeugen von einem Strahl(Ray) an der Mausposition
  
         RaycastHit hit; //Zum erfassen der Position 
@@ -356,8 +353,6 @@ public class CController : MonoBehaviour {
 		createStandardEdge (vs5, vs6, 10, 0);
 		createStandardEdge (vs4, vs6, 10, 0);
 
-        // CHEESE
-        createStandardEdge (vs3, vs2, 2, 0);
 
         v1 = new Vector3(0, 0, 0); // Position zurücksetzen von Knotenposition 1
         v2 = new Vector3(0, 0, 0); // Position zurücksetzen von Knotenposition 2
@@ -549,13 +544,11 @@ public class CController : MonoBehaviour {
 	//Getter für die Knoten eines Edges
     public string GetV1()
     {
-        Debug.Log("V1: " + GetNode(v1));
         return GetNode(v1);
     }
 
     public string GetV2()
     {
-        Debug.Log("V2: " + GetNode(v2));
         return GetNode(v2);
     }
 
@@ -597,7 +590,7 @@ public class CController : MonoBehaviour {
 		{
 			if (n.nodePosition.x == nodePosition.x && n.nodePosition.y == nodePosition.y){
 				return n.nodeName;
-			} 
+			}
 		}
 		return null;
 	}

@@ -90,7 +90,6 @@ public class SimpleRowManager : MonoBehaviour {
         //Instanzierung des Prefabs
         GameObject edgeInTable = Instantiate(edgePrefab, edgeParent.transform);
         currentEdgeIndex = edgeInTable.transform.GetSiblingIndex();
-        Debug.Log("Index: " + currentEdgeIndex);
 
         edgeInTable.name = edgeInTable.name.Replace("(Clone)", "");
         edgeInTable.name = ccont.GetV1() + " zu " + ccont.GetV2();
