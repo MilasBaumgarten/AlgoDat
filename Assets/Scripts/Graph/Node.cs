@@ -21,34 +21,36 @@ namespace Model
             this.isSource = isSource;
             this.isSink = isSink;
 		}
-
-        public void setSource(bool isSource)
-        {
-            this.isSource = isSource;
-        }
-
-            public bool getSource()
+        // Quelle zurückgeben
+        public bool getSource()
 		{
 			return isSource;
 		}
-
-        public void SetSink(bool isSink)
-        {
-            this.isSink = isSink;
-        }
-
-		public bool getSink()
+        // Senke zurückgeben
+        public bool getSink()
 		{
 			return isSink;
 		}
+        // Node Namen zurückgeben
 		public string getName()
 		{
 			return nodeName;
 		}
 
-		public List<Edge> getConnectedEdges(){
+		public List<Edge> getConnectedEdges()
+        {
 			return cEdges;
 		}
-	}
+        // Quelle setzen
+        public void setSource(bool isSource)
+        {
+            this.isSource = isSource;
+        }
+        // Senke setzen
+        public void SetSink(bool isSink)
+        {
+            this.isSink = isSink;
+        }
+    }
 }
 
