@@ -51,8 +51,6 @@ public class VertexEdgeNameGen : MonoBehaviour {
         edgeName = edgeChar + edgeNum.ToString();
         //Zahlenwert inkrementieren
         edgeNum++;
-        //Testausgabe in der Konsole
-        Debug.Log("Edge: " + edgeName);
         //String zurückgeben
         return edgeName;
     }
@@ -62,8 +60,6 @@ public class VertexEdgeNameGen : MonoBehaviour {
         vertexNum = ccont.nodeNumber;
         //Zusammensetzen des Strings
         vertexName = vertexChar + vertexNum.ToString();
-        //Testausgabe in der Konsole
-        Debug.Log("Vertex: " + vertexName);
         //String zurückgeben
         return vertexName;
     }
