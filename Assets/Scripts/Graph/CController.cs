@@ -275,8 +275,8 @@ public class CController : MonoBehaviour
             edgeObject.GetComponent<LineRenderer>().SetPositions(new Vector3[] { new Vector3(v1.x, v1.y, 2), new Vector3(v2.x, v2.y, 2) });
         }
         //Neues Edge Objekt erstellen mit passenden Werten
+		edgeObject.name = GetNode(v1) + " zu " + GetNode(v2);
         e = new Edge(edgeObject, GetNode(v1), GetNode(v2), edgeObject.name, capacity, flow, false);
-        edgeObject.name = GetNode(v1) + " zu " + GetNode(v2);
         //Edge Objekt in Liste eintragen
         edges.Add(e);
         //Edge auch in Liste in Nodes eintragen, damit Nodes wissen welche Kanten an ihnen sitzt
