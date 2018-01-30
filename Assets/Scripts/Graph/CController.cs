@@ -255,6 +255,7 @@ public class CController : MonoBehaviour
         //Tabelleneintrag erzeugen
         rowManager.InstantiateVertex();
         nodeNumber++;
+        vertexCount++;
     }
 
     //Normale Edge für Standard Graphen erstellen

@@ -3,14 +3,15 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using Model;
+using UnityEngine.SceneManagement;
 
 public class SimpleRowManager : MonoBehaviour {
 
     //Prefab, welches instanziert werden soll
     public GameObject vertexPrefab;
     public Text vertexName;
-    public Toggle vertexSourceToggle;
-    public Toggle vertexSinkToggle;
+    public GameObject vertexSourceToggle;
+    public GameObject vertexSinkToggle;
 
     public GameObject edgePrefab;
     public Text edgeName;
@@ -27,11 +28,14 @@ public class SimpleRowManager : MonoBehaviour {
     private CController ccont;
     private List<Node> nodes;
     private List<Edge> edges;
-    int currentEdgeIndex;
+    private int currentEdgeIndex;
+    private int currentNodeIndex;
 
     //Container, in welchem das Prefab instanziert werden soll
     public GameObject vertexParent;
     public GameObject edgeParent;
+
+    private bool createStandardGraph;
 
     void Start()
     {
@@ -42,13 +46,25 @@ public class SimpleRowManager : MonoBehaviour {
         edgeEndList = new ArrayList();
 
         currentEdgeIndex = 0;
+        currentNodeIndex = 0;
+
+        createStandardGraph = false;
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            currentEdgeIndex = 0;
+            currentNodeIndex = 0;
+            createStandardGraph = true;
+        }
     }
 
     public void InstantiateVertex()
     {
         //Node-Liste aktualisieren
         nodes = ccont.GetAllNodes();
-        
 
         isEdge = false;
         if(isEdge)
@@ -61,8 +77,29 @@ public class SimpleRowManager : MonoBehaviour {
         nodeInTable.name = "Knoten " + (ccont.nodeNumber).ToString();
     }
 
+    public void readSourceSink()
+    {
+        for (int i = 0; i < nodes.Count; i++)
+        {
+            GameObject nodeInTable = GameObject.FindGameObjectWithTag("VertexContent").transform.GetChild(i + 1).gameObject;
+            nodeInTable.transform.Find("SourceToggle").GetComponent<Toggle>().isOn = nodes[i].getSource();
+            nodeInTable.transform.Find("SinkToggle").GetComponent<Toggle>().isOn = nodes[i].getSink();
+        }
+    }
+
     public void InstantiateEdge()
     {
+        if (createStandardGraph)
+        {
+            currentEdgeIndex = 0;
+            createStandardGraph = false;
+        }
+
+        if(GameObject.FindGameObjectWithTag("EdgeContent").transform.childCount == 1)
+        {
+            currentEdgeIndex = 0;
+        }
+
         //Edge-Liste aktualisieren
         edges = ccont.GetAllEdges();
 
@@ -74,7 +111,7 @@ public class SimpleRowManager : MonoBehaviour {
 
         edgeStartList.Add(ccont.GetV1());
         edgeEndList.Add(ccont.GetV2());
-
+        Debug.Log("CurrentEdgeIndex: " + currentEdgeIndex);
         edgeCapacity.text = edges[currentEdgeIndex].getCapacity().ToString();
 
         isEdge = true;

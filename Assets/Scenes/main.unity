@@ -5645,8 +5645,10 @@ MonoBehaviour:
     type: 2}
   vertexName: {fileID: 114681363266693312, guid: 34555350188a3164e8b9ab1b946de84c,
     type: 2}
-  vertexSourceToggle: {fileID: 0}
-  vertexSinkToggle: {fileID: 0}
+  vertexSourceToggle: {fileID: 1882335974562052, guid: 34555350188a3164e8b9ab1b946de84c,
+    type: 2}
+  vertexSinkToggle: {fileID: 1119920235956254, guid: 34555350188a3164e8b9ab1b946de84c,
+    type: 2}
   edgePrefab: {fileID: 1268071235241458, guid: d9d39d5a509c313419800fcbf638bb20, type: 2}
   edgeName: {fileID: 114266382850475002, guid: d9d39d5a509c313419800fcbf638bb20, type: 2}
   edgeStart: {fileID: 114651803371334474, guid: d9d39d5a509c313419800fcbf638bb20,
