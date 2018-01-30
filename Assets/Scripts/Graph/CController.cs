@@ -50,6 +50,11 @@ public class CController : MonoBehaviour
     Vector3 v1 = new Vector3(0, 0, 0);
     Vector3 v2 = new Vector3(0, 0, 0);
 
+	// Materialien
+	public Material sourceMaterial;
+	public Material sinkMaterial;
+	public Material nodeMaterial;
+
     public void Start()
     {
         rowManager = GameObject.FindGameObjectWithTag("AddVertex").GetComponent<SimpleRowManager>();
@@ -256,6 +261,14 @@ public class CController : MonoBehaviour
         rowManager.InstantiateVertex();
         nodeNumber++;
         vertexCount++;
+
+		if (source){
+			nodeObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = sourceMaterial;
+		}
+
+		if (sink){
+			nodeObject.transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = sinkMaterial;
+		}
     }
 
     //Normale Edge für Standard Graphen erstellen
@@ -408,10 +421,16 @@ public class CController : MonoBehaviour
         }
         return null;
     }
+
+	public GameObject GetNodeAsGameObject(string NodeName){
+		return GameObject.Find(NodeName);
+	}
+
     public List<Edge> getAllEdges()
     {
         return edges;
     }
+
     //Quelle zurückgeben
     public Node getSource()
     {

@@ -85,21 +85,20 @@ public class SinkBoolean : MonoBehaviour
 
         //Node-Liste wird aus dem CController geladen und in lokale Liste gespeichert
         nodes = ccont.GetAllNodes();
-        //isSink der ausgewählten Node wird auf den Wert des Toggles gesetzt
-        nodes[currentIndex].SetSink(thisToggle.GetComponent<Toggle>().isOn);
+        //Senke updaten
+		foreach(Node n in nodes){
+			if (n != nodes[currentIndex]){
+				n.setSink(false);
+				if (!n.isSource)
+					ccont.GetNodeAsGameObject(n.getName()).transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = ccont.nodeMaterial;
+			}
+			else{
+				n.setSink(true);
+				ccont.GetNodeAsGameObject(n.getName()).transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = ccont.sinkMaterial;
+			}
+		}
+
         //Node-Liste im CController aktualisieren
         ccont.SetAllNodes(nodes);
-
-        //Testweise wird die Node-Liste aus dem CController neu geladen
-        //Um zu sehen, ob sich die Werte entsprechend aktualisiert haben
-        nodes = ccont.GetAllNodes();
-
-        //Test-Ausgabe
-        Debug.Log("List of nodes:");
-        foreach (Node n in nodes)
-        {
-            //Für jede Node in der Liste wird der Wert der isSink-boolean ausgegeben
-            Debug.Log(n.nodeName + ": isSink: " + n.getSink());
-        }
     }
 }

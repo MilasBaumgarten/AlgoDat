@@ -21,17 +21,17 @@ namespace Model
             this.isSource = isSource;
             this.isSink = isSink;
 		}
-        // Quelle zurückgeben
+        // Quelle zurï¿½ckgeben
         public bool getSource()
 		{
 			return isSource;
 		}
-        // Senke zurückgeben
+        // Senke zurï¿½ckgeben
         public bool getSink()
 		{
 			return isSink;
 		}
-        // Node Namen zurückgeben
+        // Node Namen zurï¿½ckgeben
 		public string getName()
 		{
 			return nodeName;
@@ -47,7 +47,7 @@ namespace Model
             this.isSource = isSource;
         }
         // Senke setzen
-        public void SetSink(bool isSink)
+        public void setSink(bool isSink)
         {
             this.isSink = isSink;
         }

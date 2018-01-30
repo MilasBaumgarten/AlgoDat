@@ -84,19 +84,23 @@ public class SourceBoolean : MonoBehaviour {
 
         //Die Node-Liste aus der CController auslesen
         nodes = ccont.GetAllNodes();
-        //Dem Toggle-Wert des Knotens mit dem aktuellen Index wird der Wert des Toggles übergeben
-        nodes[currentIndex].setSource(thisToggle.GetComponent<Toggle>().isOn);
+		// Quelle einfärben
+		
+
+        //Quelle updaten
+		foreach(Node n in nodes){
+			if (n != nodes[currentIndex]){
+				n.setSource(false);
+				if (!n.isSink)
+					ccont.GetNodeAsGameObject(n.getName()).transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = ccont.nodeMaterial;
+			}
+			else{
+				n.setSource(true);
+				ccont.GetNodeAsGameObject(nodes[currentIndex].getName()).transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>().material = ccont.sourceMaterial;
+			}
+		}
+
         //Die Node-Liste aus dem CController wird aktualisiert
         ccont.SetAllNodes(nodes);
-        //Testweise wird die aktualisierte Node-Liste aus dem CController geladen
-        nodes = ccont.GetAllNodes();
-
-        //Test-Ausgabe
-        Debug.Log("List of nodes:");
-        foreach(Node n in nodes)
-        {
-            //Für jeden gespeicherten Knoten wird die aktuelle isSource-boolean ausgegeben
-            Debug.Log(n.nodeName + ": isSource: " + n.getSource());
-        }
     }
 }
